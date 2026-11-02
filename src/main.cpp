@@ -31,6 +31,11 @@ void windowClose();
 
 // This function is ran every frame. Return false to close the program.
 // The vase majority of the program functionality is here, so it is the first defined function
+// Run the rendering and calculations here, but don't do SDL_RenderPresent inside this loop.
+//     It should take up to 1/60th of a second to do all the calculations, once that is finished,
+//     the rest of the time will be spent watiing for the proper time to render, then it will render
+//     the window. SDL_RenderPresent happens at the END of every frame for consistency, rather than
+//     somewhere in the middle
 bool loop(SDL_Event* e, SDL_Time dt) {
 	// Handle events
 	if (SDL_PollEvent(e)) {
@@ -42,7 +47,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Render the window
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
 
 	// Continue
 	return true;
@@ -82,6 +86,9 @@ int main() {
 
 		// Update the "now"
 		now = tick;
+
+		// Render the window
+		SDL_RenderPresent(renderer);
 	}
 
 	windowClose();
