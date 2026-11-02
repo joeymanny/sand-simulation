@@ -65,7 +65,6 @@ int main() {
 	SDL_Time dt = 0;
 	SDL_GetCurrentTime(&now);
 
-
 	// Main loop
 	while (loop(&e, dt)) {
 		// Get the time it took to render
