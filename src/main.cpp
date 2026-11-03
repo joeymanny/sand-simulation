@@ -12,6 +12,11 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_time.h>
 
+// Our header files
+#include "headers/sand.h"
+#include "headers/interactions.h"
+#include "headers/display.h"
+
 // Global constants
 constexpr int defaultScreenWidth = 640;
 constexpr int defaultScreenHeight = 480;
@@ -36,7 +41,7 @@ void windowClose();
 //     somewhere in the middle
 bool loop(SDL_Event* e, SDL_Time dt) {
 	// Handle events
-	if (SDL_PollEvent(e)) {
+	while (SDL_PollEvent(e)) {
 		if (e->type == SDL_EVENT_QUIT) {
 			return false;
 		}
@@ -45,6 +50,12 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Render the window
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(renderer);
+
+	// General idea of process:
+	// 1. Calculate collisions and accelerate particles as needed
+	// 2. Update the positions of particles
+	// 3. Render particles
+	//        Probably using SDL_RenderPoint and calculating the circle to render
 
 	// Continue
 	return true;
