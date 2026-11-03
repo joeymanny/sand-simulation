@@ -53,7 +53,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 
 	// General idea of process:
 	// 1. Calculate collisions and accelerate particles as needed
+	//        Could be multithreaded
 	// 2. Update the positions of particles
+	//        Could be multithreaded, also update the cell each particle is in
 	// 3. Render particles
 	//        Probably using SDL_RenderPoint and calculating the circle to render
 
