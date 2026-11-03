@@ -9,9 +9,7 @@
 
 // Simple Directmedia Layer
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
 #include <SDL3/SDL_render.h>
-#include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_time.h>
 
 // Global constants
