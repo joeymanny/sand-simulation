@@ -26,7 +26,7 @@ STATIC_PATHS := $(foreach static,$(STATICS),/usr/x86_64-w64-mingw32/lib/$(static
 
 build/win/$(OUTPUT).exe: src/*.cpp src/headers/*.h
 	mkdir -p build/win
-	$(CXX) $(CXXFLAGS_WIN) -target x86_64-pc-win32-gnu -O3 -s src/*.cpp -static-libstdc++ -static bin/libSDL3.a $(STATIC_PATHS) \
+	$(CXX) $(CXXFLAGS_WIN) -target x86_64-pc-win32-gnu -mwindows -O3 -s src/*.cpp -static-libstdc++ -static bin/libSDL3.a $(STATIC_PATHS) \
 		-L/usr/x86_64-w64-mingw32/lib -I/usr/x86_64-w64-mingw32/include/ -o build/win/$(OUTPUT).exe
 
 win: build/win/$(OUTPUT).exe
