@@ -22,7 +22,7 @@ We cross-compiled from linux to windows as a static binary. We don't want you to
 
 SDL3's repository does not provide a static library in the releases tab, so we had to compile it ourselves. For your convenience, even though it is a bad practice, we embedded the libSDL3.a static library into the bin folder. We had to clone the SDL3 git repository, make a cross-compile toolchain file for cmake, and compile it with the static option, and the instructions that we followed to pull this off probably isn't going to work on everyone's machine.
 
-If you want to cross-compile the Sand Simulaton yourself, install `mingw-w64-binutils`, `mingw-w64-headers`, and `mingw-w64-gcc` (or whatever the non-arch-linux equivalents are), then run `make win` to build the .exe with optimizations, or `make run-win` to also run it.
+If you want to cross-compile the Sand Simulaton yourself, install `mingw-w64-binutils`, `mingw-w64-headers`, and `mingw-w64-gcc` (or whatever the non-arch-linux equivalents are), then run `make win` to build the .exe with optimizations, or `make run-win` to also run it if you have wine.
 
 # How To Use
 we will have sliders and stuff
