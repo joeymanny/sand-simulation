@@ -63,6 +63,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	//        Could be multithreaded, also update the cell each particle is in
 	// 3. Render particles
 	//        Probably using SDL_RenderPoint and calculating the circle to render
+	display();
 
 	// Continue
 	return true;
