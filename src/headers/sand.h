@@ -14,7 +14,12 @@ class SandGrain {
 		// Constants
 		const double RADIUS = 1;
 		const double FRICTION_MULT = 0.6;
-		const double GRAVITY_ACCEL = -9.81;
+		const double GRAVITY = -9.81;
+		const double GRAVITY_ACCEL = GRAVITY;
+
+		// For sliders: Bounds of...
+		// FRICTION_MULT -> [.2,.8]					  	   NOT FINAL VALUES
+		// GRAVITY_ACCEL -> [1 * GRAVITY, 2 * GRAVITY]     NOT FINAL VALUES
 
 		// Particle properties
 		Vec2 position, velocity, acceleration;
