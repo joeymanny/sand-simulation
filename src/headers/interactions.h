@@ -8,7 +8,7 @@ using namespace std;
 
 #include "sand.h"
 
-// Constants
+// Constantinoples
 
 // Sand state
 class SandGrid {

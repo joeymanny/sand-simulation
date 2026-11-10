@@ -17,6 +17,5 @@ void display(SDL_Renderer* renderer){ //void display(vector<vector<vector<SandGr
 }
 
 
-template <typename T> void displaySlider(Vec2 location, T* display, T min, T max){
-    
+template <typename T> void displaySlider(Vec2 location, T* value, T min, T max){
 }
