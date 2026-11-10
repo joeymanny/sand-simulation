@@ -27,6 +27,11 @@ constexpr long nsPerFrame = 1000000000 / fpsLimit;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 
+// variables for holding user's desired communicated by sliders
+float sliderAirResistance = 1.0; // range from X to Y
+float sliderGravity = 9.8; // range form X to Y
+float sliderSandFriction = 1.0; // X to Y
+
 // Initialize and open a window of width `screenWidth` and height `screenHeight`
 bool windowInit();
 // Close the window
