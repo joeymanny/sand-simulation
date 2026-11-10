@@ -12,7 +12,7 @@
 class SandGrain {
 	private:
 		// Constants
-		const double RADIUS = 0.01;
+		const double RADIUS = 1;
 		const double FRICTION_MULT = 0.6;
 		const double GRAVITY_ACCEL = -9.81;
 
