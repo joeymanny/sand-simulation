@@ -18,19 +18,25 @@
 #include "headers/display.h"
 
 // Global constants
-constexpr int defaultScreenWidth = 640;
-constexpr int defaultScreenHeight = 480;
-constexpr int fpsLimit = 60;
-constexpr long nsPerFrame = 1000000000 / fpsLimit;
+constexpr int SCREEN_WIDTH = 640;
+constexpr int SCREEN_HEIGHT = 480;
+constexpr int FPS_LIMIT = 60;
+constexpr long NS_PER_FRAME = 1000000000 / FPS_LIMIT;
+
+// For sliders: Bounds of...
+// FRICTION_MULT -> [.2,.8]					  	   NOT FINAL VALUES
+// GRAVITY_ACCEL -> [1 * GRAVITY, 2 * GRAVITY]     NOT FINAL VALUES
 
 // Constants for the entire window
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
 float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
 float sliderSandFriction = 1.0; // X to Y
+int sandParticles = 1000;
 
 // Initialize and open a window of width `screenWidth` and height `screenHeight`
 bool windowInit();
@@ -94,8 +100,8 @@ int main() {
 
 		// Sleep until you are able to render the next frame. This is what allows framerate limiting
 		SDL_Time renderTime = tick - now;
-		if (renderTime < nsPerFrame)
-			SDL_DelayNS(nsPerFrame - renderTime);
+		if (renderTime < NS_PER_FRAME)
+			SDL_DelayNS(NS_PER_FRAME - renderTime);
 
 		// Update the elapsed time inbetween frames for whatever the loop function needs it for
 		SDL_GetCurrentTime(&tick);
@@ -120,7 +126,7 @@ bool windowInit() {
 	}
 
 	// Create a window, fail if error
-	if (!SDL_CreateWindowAndRenderer("Hello World", defaultScreenWidth, defaultScreenHeight, 0, &window, &renderer)) {
+	if (!SDL_CreateWindowAndRenderer("Hello World", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer)) {
 		SDL_Log("Window creation error: %s", SDL_GetError());
 		return false;
 	}

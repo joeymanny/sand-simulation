@@ -8,23 +8,22 @@
 
 #include "math.h"
 
+
 // Defines a single grain of sand
 class SandGrain {
 	private:
 		// Constants
-		const double RADIUS = 1;
-		const double GRAVITY = -9.81;
-		double FRICTION_MULT = 0.6;
-		double GRAVITY_ACCEL = GRAVITY;
-
-		// For sliders: Bounds of...
-		// FRICTION_MULT -> [.2,.8]					  	   NOT FINAL VALUES
-		// GRAVITY_ACCEL -> [1 * GRAVITY, 2 * GRAVITY]     NOT FINAL VALUES
+		static constexpr double RADIUS = 0.5; // In pixels
+		static constexpr int SQ_PIXELS_PER_GRID = 10;
 
 		// Particle properties
 		Vec2 position, velocity, acceleration;
+		double frictionMult = 0.6;
+		double gravityAccel = -9.81;
 
 	public:
+		// Static initializer/updater to set screen width for gridding purposes
+		static void setScreenWidth(int width, int height);
 		// Constructor (do `SandGrain grain({x, y})` to initialize)
 		SandGrain(Vec2 initialPosition);
 		// Intended to be ran every frame to update the velocity of the particle from the acceleration
