@@ -7,7 +7,7 @@
 
 SandGrain::SandGrain(Vec2 startingPosition) {
 	position = startingPosition;
-	acceleration = {0, gravityAccel};
+	acceleration.set(0, gravityAccel);
 }
 
 // add other stuff
