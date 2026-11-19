@@ -18,6 +18,8 @@ struct a {
 
 void calculatePixels(a pixels);
 
-void circle(a pixels, Vec2 center, int radius);
+void circle(a* pixels, Vec2 center, int radius, unsigned int color);
+
+void setPixel(a* pixels, int pixelX, int pixelY);
 
 template <typename T> void displaySlider(Vec2 location, T* value, T min, T max);
