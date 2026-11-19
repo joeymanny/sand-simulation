@@ -23,6 +23,8 @@ Vec2 Vec2::fromMagnitudeDirection(double magnitude, double direction) {
 
 void Vec2::set(double x, double y) {
 	// Set values once so that they don't have to be calculated every time
+	xPos = x;
+	yPos = y;
 	dir = atan2(yPos, xPos);
 	mag = sqrt(pow(xPos, 2) + pow(yPos, 2));
 	unitX = xPos / mag;
