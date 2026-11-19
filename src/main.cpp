@@ -11,6 +11,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_time.h>
+#include <SDL3/SDL_video.h>
+#include <vector>
 
 // Our header files
 #include "headers/sand.h"
@@ -30,6 +32,8 @@ constexpr long NS_PER_FRAME = 1000000000 / FPS_LIMIT;
 // Constants for the entire window
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+SDL_Texture* pixelTexture = nullptr;
+vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
@@ -58,9 +62,12 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		}
 	}
 
+	// Calculate pixel data
+	calculatePixels({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
+
 	// Render the window
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderClear(renderer);
+	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
+	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
 
 	// General idea of process:
 	// 1. Calculate collisions and accelerate particles as needed
@@ -69,7 +76,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	//        Could be multithreaded, also update the cell each particle is in
 	// 3. Render particles
 	//        Probably using SDL_RenderPoint and calculating the circle to render
-	display(renderer);
 
 	// Continue
 	return true;
@@ -136,11 +142,15 @@ bool windowInit() {
 		return false;
 	}
 
+	pixelTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	return true;
 }
 
 void windowClose() {
 	// Clean up resources and close the window
+	SDL_DestroyTexture(pixelTexture);
+	pixelTexture = nullptr;
 	SDL_DestroyRenderer(renderer);
 	renderer = nullptr;
 	SDL_DestroyWindow(window);
