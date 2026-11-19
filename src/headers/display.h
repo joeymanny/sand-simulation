@@ -6,8 +6,6 @@
 #include <vector>
 #include "math.h"
 
-// void display(vector<vector<vector<SandGrain>>>){}
-
 typedef std::vector<unsigned int> PixelList;
 
 struct a {
@@ -16,9 +14,7 @@ struct a {
 	int screenHeight;
 };
 
-void calculatePixels(a pixels);
-
-void circle(a* pixels, Vec2 center, int radius, unsigned int color);
+void circle(a pixels, Vec2 center, int radius, unsigned int color);
 
 void setPixel(a* pixels, int pixelX, int pixelY);
 

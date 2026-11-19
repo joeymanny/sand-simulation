@@ -63,7 +63,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	}
 
 	// Calculate pixel data
-	calculatePixels({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
+	circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, Vec2(100, 100), 20, 0xFFFFFFFF);
 
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
