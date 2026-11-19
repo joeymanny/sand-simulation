@@ -1,6 +1,6 @@
 CXX := clang++
 CXXFLAGS := --std=c++17 -xc++ -Wall -Wno-missing-prototypes -lSDL3
-CXXFLAGS_WIN := --std=c++17
+CXXFLAGS_WIN := --std=c++17 -pthread
 
 # Append ".exe" on windows
 OUTPUT := sandsim
