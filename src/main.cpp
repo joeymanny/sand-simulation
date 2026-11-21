@@ -62,7 +62,18 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		}
 	}
 
-	// Calculate pixel data
+	// Refresh framebuffer to all black
+	pixelData = vector<unsigned int>(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
+
+	// Calculate particles
+	for (vector<vector<SandGrain>>& row : grid.the)
+		for (vector<SandGrain>& col : row)
+			for (SandGrain& grain : col) {
+				grain.updateVelocity(dt);
+				grain.updatePosition(dt);
+			}
+
+	// Render pixels (update to density map later)
 	for (vector<vector<SandGrain>>& row : grid.the)
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col)

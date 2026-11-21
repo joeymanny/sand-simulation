@@ -3,6 +3,8 @@
  * Defines special-purpose math functions and classes
  */
 
+#define dtToSec(dt) ((double)dt / 1000000000)
+
 // Class that defines a two-dimensional vector with x- and y-components, like a position on a 2-dimensional plane
 class Vec2 {
 	private:
@@ -36,4 +38,8 @@ class Vec2 {
 		Vec2 scale(double n) const;
 		// scale() but assigns the output to the current vector
 		void scaleAssign(double n);
+		// vec1 + vec2
+		Vec2 add(Vec2 rhs) const;
+		// vec1 += vec2;
+		void addAssign(Vec2 rhs);
 };

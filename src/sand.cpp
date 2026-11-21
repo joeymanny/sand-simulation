@@ -4,6 +4,8 @@
 
 #include "headers/sand.h"
 #include "headers/math.h"
+#include "headers/interactions.h"
+#include <SDL3/SDL_log.h>
 
 SandGrain::SandGrain(Vec2 startingPosition) {
 	position = startingPosition;
@@ -12,6 +14,14 @@ SandGrain::SandGrain(Vec2 startingPosition) {
 
 Vec2 SandGrain::getPosition() const {
 	return position;
+}
+
+void SandGrain::updateVelocity(SDL_Time dt) {
+	velocity.addAssign(acceleration.scale(dtToSec(dt)));
+}
+
+void SandGrain::updatePosition(SDL_Time dt) {
+	position.addAssign(velocity.scale(dtToSec(dt)));
 }
 
 // add other stuff

@@ -65,3 +65,11 @@ void Vec2::scaleAssign(double n) {
 	xPos *= n;
 	yPos *= n;
 }
+
+Vec2 Vec2::add(Vec2 rhs) const {
+	return {xPos + rhs.x(), yPos + rhs.y()};
+}
+
+void Vec2::addAssign(Vec2 rhs) {
+	set(xPos + rhs.x(), yPos + rhs.y());
+}
