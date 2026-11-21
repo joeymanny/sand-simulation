@@ -71,6 +71,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col) {
 				grain.updateVelocity(dt);
 				grain.updatePosition(dt);
+				grid.updateGridPlacements();
 			}
 
 	// Render pixels (update to density map later)
@@ -113,7 +114,7 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	grid.addParticle({320, 100});
+	grid.addParticle({320, 400});
 
 	// Main loop
 	while (loop(&e, dt)) {

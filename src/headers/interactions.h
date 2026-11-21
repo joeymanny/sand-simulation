@@ -16,6 +16,7 @@ class SandGrid {
 	public:
 		// Width AND height of cell grid
 		static constexpr int GRID_CELL_WIDTH = 10;
+		int cellsX, cellsY;
 
 		/*
 			Rows {
@@ -38,7 +39,6 @@ class SandGrid {
 
 		// Update grid placements for position updates
 		void updateGridPlacements();
-
 };
 
 // stuff needed
