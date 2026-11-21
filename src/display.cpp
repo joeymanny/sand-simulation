@@ -8,42 +8,67 @@
 
 #include <SDL3/SDL_log.h>
 #include <vector>
+#include <algorithm>
 #include <cmath>
 using namespace std;
 
-class Slider {
-	private:
-		Vec2 position;
-		float min;
-		float max;
-		float value;
-	public:
-		Vec2 getPosition(){
-			return position;
+constexpr int SLIDER_WIDTH = 200;
+constexpr int SLIDER_HEIGHT = 5;
+constexpr int SLIDER_CIRCLE_RADIUS = 5;
+
+Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue){
+	xPos = inXPos;
+	yPos = inYPos;
+	minVal = inMin;
+	maxVal = inMax;
+	value = clamp(value, minVal, maxVal);
+}
+int Slider::x(){
+	return xPos;
+}
+int Slider::y(){
+	return yPos;
+}
+void Slider::setX(int newX){
+	xPos = newX;
+}
+ void Slider::setY(int newY){
+	yPos = newY;
+}
+float Slider::getMin(){
+	return minVal;
+}
+void Slider::setMin(float newMin){
+	minVal = newMin;
+}
+float Slider::getMax(){
+	return maxVal;
+}
+void Slider::setMax(float newMax){
+	maxVal = newMax;
+}
+float Slider::getValue(){
+	return value;
+}
+void Slider::setValue(float newValue){
+	value = clamp(newValue, minVal, maxVal);
+}
+// sliders are drawn starting at their position going SLIDER_WIDTH to the right
+// they are a wide rectangle with a red circle drawn to indicate value
+// don't place it too close to the right edge, it doesnt do any edge detection
+void Slider::drawSlider(a pixels){
+	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
+		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
+			setPixel(&pixels, col, row, 0xFFFFFFFF);
 		}
-		void setPosition(Vec2  newPosition){
-			position = newPosition;
-		}
-		float getMin(){
-			return min;
-		}
-		void setMin(float newMin){
-			min = newMin;
-		}
-		float getMax(){
-			return max;
-		}
-		void setMax(float newMax){
-			max = newMax;
-		}
-		float getValue(){
-			return value;
-		}
-		void setValue(float newValue){
-			value = newValue;
-		}
-		
-};
+	}
+	circle(
+		pixels,
+		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / maxVal)), (float)yPos + (SLIDER_HEIGHT * 2.0)),
+		SLIDER_CIRCLE_RADIUS,
+		0xFF0000FF
+	);
+}
 
 void setPixel(a* pixels, int pixelX, int pixelY, unsigned int color) {
 	if (pixelY > 0 && pixelY < pixels->screenHeight && pixelX > 0 && pixelX < pixels->screenWidth) {
@@ -63,7 +88,4 @@ void circle(a pixels, Vec2 center, int radius, unsigned int color) {
 			}
 		}
 	}
-}
-
-template <typename T> void displaySlider(Vec2 location, T* value, T min, T max){
 }

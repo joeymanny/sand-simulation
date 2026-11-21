@@ -14,8 +14,29 @@ struct a {
 	int screenHeight;
 };
 
+class Slider {
+	private:
+		int xPos;
+		int yPos;
+		float minVal;
+		float maxVal;
+		float value;
+	public:
+		Slider(int, int, float, float, float);
+		int x();
+		int y();
+		void setX(int);
+		void setY(int);
+		float getMin();
+		void setMin(float);
+		float getMax();
+		void setMax(float);
+		float getValue();
+		void setValue(float);
+		void drawSlider(a);
+};
 void circle(a pixels, Vec2 center, int radius, unsigned int color);
 
-void setPixel(a* pixels, int pixelX, int pixelY);
+void setPixel(a* pixels, int pixelX, int pixelY,unsigned int color);
 
 template <typename T> void displaySlider(Vec2 location, T* value, T min, T max);

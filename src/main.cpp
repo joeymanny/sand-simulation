@@ -37,7 +37,8 @@ vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
-float sliderAirResistance = 1.0; // range from X to Y
+Slider sliderAirResistance(10,10, 0.0, 1.0, 0.6);
+// float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
 float sliderSandFriction = 1.0; // X to Y
 int sandParticles = 1000;
@@ -79,6 +80,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col)
 				circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
+
+	sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.001);
+	sliderAirResistance.drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
