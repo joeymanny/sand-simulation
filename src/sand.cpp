@@ -10,4 +10,8 @@ SandGrain::SandGrain(Vec2 startingPosition) {
 	acceleration.set(0, gravityAccel);
 }
 
+Vec2 SandGrain::getPosition() const {
+	return position;
+}
+
 // add other stuff

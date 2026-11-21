@@ -63,7 +63,10 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	}
 
 	// Calculate pixel data
-	circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, Vec2(100, 100), 20, 0xFFFFFFFF);
+	for (vector<vector<SandGrain>>& row : grid.the)
+		for (vector<SandGrain>& col : row)
+			for (SandGrain& grain : col)
+				circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
@@ -97,6 +100,9 @@ int main() {
 	SDL_Time now;
 	SDL_Time dt = 0;
 	SDL_GetCurrentTime(&now);
+
+	// Initialize particles
+	grid.addParticle({320, 100});
 
 	// Main loop
 	while (loop(&e, dt)) {

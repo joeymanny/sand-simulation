@@ -12,18 +12,14 @@
 // Defines a single grain of sand
 class SandGrain {
 	private:
-		// Constants
-		static constexpr double RADIUS = 0.5; // In pixels
-		static constexpr int SQ_PIXELS_PER_GRID = 10;
-
 		// Particle properties
 		Vec2 position, velocity, acceleration;
 		double frictionMult = 0.6;
 		double gravityAccel = -9.81;
 
 	public:
-		// Static initializer/updater to set screen width for gridding purposes
-		static void setScreenWidth(int width, int height);
+		static constexpr double RADIUS = 20; // In pixels
+
 		// Constructor (do `SandGrain grain({x, y})` to initialize)
 		SandGrain(Vec2 initialPosition);
 		// Intended to be ran every frame to update the velocity of the particle from the acceleration
@@ -35,4 +31,6 @@ class SandGrain {
 		// Insantly accelerate the particle by adding `velocity` to the particle's velocity
 		void instantAccelerate(Vec2 velocity);
 
+		// Get position
+		Vec2 getPosition() const;
 };

@@ -56,7 +56,7 @@ void circle(a pixels, Vec2 center, int radius, unsigned int color) {
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
 			float dist = sqrt(pow(row - center.x(), 2) + pow(col - center.y(), 2));
 			if (dist <= radius) {
-				setPixel(&pixels, col, row, color);
+				setPixel(&pixels, row, col, color);
 				// Border color and size
 				// if (fabs(dist - radius) < 5)
 				// 	setPixel(pixels, col, row, 0xFF0000FF);

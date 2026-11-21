@@ -6,6 +6,7 @@
 #include <vector>
 using namespace std;
 
+#include "math.h"
 #include "sand.h"
 
 // Constantinoples
@@ -29,6 +30,14 @@ class SandGrid {
 
 		// Constructor
 		SandGrid(int screenWidth, int screenHeight);
+
+		// Add a sand particle to the grid
+		void addParticle(Vec2 pos);
+		// Remove a random sand particle from the grid
+		void removeParticle();
+
+		// Update grid placements for position updates
+		void updateGridPlacements();
 
 };
 
