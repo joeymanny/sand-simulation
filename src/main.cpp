@@ -37,7 +37,7 @@ vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
-Slider sliderAirResistance(10,10, 0.0, 1.0, 0.6);
+Slider sliderAirResistance(10,10, 5.0, 10.0, 7.0);
 // float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
 float sliderSandFriction = 1.0; // X to Y

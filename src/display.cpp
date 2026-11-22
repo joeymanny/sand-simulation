@@ -12,16 +12,16 @@
 #include <cmath>
 using namespace std;
 
-constexpr int SLIDER_WIDTH = 200;
-constexpr int SLIDER_HEIGHT = 5;
-constexpr int SLIDER_CIRCLE_RADIUS = 5;
+constexpr int SLIDER_WIDTH = 100;
+constexpr int SLIDER_HEIGHT = 4;
+constexpr int SLIDER_CIRCLE_RADIUS = 6;
 
 Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue){
 	xPos = inXPos;
 	yPos = inYPos;
 	minVal = inMin;
 	maxVal = inMax;
-	value = clamp(value, minVal, maxVal);
+	value = clamp(inValue, minVal, maxVal);
 }
 int Slider::x(){
 	return xPos;
@@ -62,9 +62,10 @@ void Slider::drawSlider(a pixels){
 			setPixel(&pixels, col, row, 0xFFFFFFFF);
 		}
 	}
+	SDL_Log("current val: %f", value);
 	circle(
 		pixels,
-		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / maxVal)), (float)yPos + (SLIDER_HEIGHT * 2.0)),
+		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / maxVal)), (float)yPos + (SLIDER_HEIGHT / 2.0)),
 		SLIDER_CIRCLE_RADIUS,
 		0xFF0000FF
 	);
