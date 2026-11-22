@@ -14,11 +14,15 @@ struct ScreenPixels {
 	int screenHeight;
 };
 
+// this const must be updated by hand
+// it must EXCLUDE the NONE variant
 constexpr int NUM_SLIDERS = 2;
-
 enum ProgramSlider{
 	FRICTION,
 	PLATFORM,
+	// add new variants above NONE
+	// and do not include the NONE variant
+	// in the NUM_SLIDERS count
 	NONE,
 };
 
