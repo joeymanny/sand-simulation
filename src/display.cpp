@@ -4,7 +4,8 @@
 
 #include "headers/display.h"
 #include "headers/sand.h"
-#include "math.h"
+#include "headers/math.h"
+#include "headers/common.h"
 
 #include <SDL3/SDL_log.h>
 #include <vector>
@@ -56,7 +57,7 @@ void Slider::setValue(float newValue) {
 // sliders are drawn starting at their position going SLIDER_WIDTH to the right
 // they are a wide rectangle with a red circle drawn to indicate value
 // don't place it too close to the right edge, it doesnt do any edge detection
-void Slider::drawSlider(ScreenPixels pixels){
+void Slider::drawSlider(vector<unsigned int>* pixels){
 	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
 		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
 			setPixel(pixels, col, row, 0xFFFFFFFF);
@@ -70,13 +71,13 @@ void Slider::drawSlider(ScreenPixels pixels){
 	);
 }
 
-void setPixel(const ScreenPixels& pixels, int pixelX, int pixelY, unsigned int color) {
-	if (pixelY > 0 && pixelY < pixels.screenHeight && pixelX > 0 && pixelX < pixels.screenWidth) {
-		pixels.pixelData->at(pixels.screenWidth * pixelY + pixelX) = color;
+void setPixel(vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int color) {
+	if (pixelY > 0 && pixelY < SCREEN_HEIGHT && pixelX > 0 && pixelX < SCREEN_WIDTH) {
+		pixels->at(SCREEN_WIDTH * pixelY + pixelX) = color;
 	}
 }
 
-void circle(const ScreenPixels& pixels, const Vec2& center, int radius, unsigned int color) {
+void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color) {
 	for (int row = center.x() - radius; row <= center.x() + radius; row++) {
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
 			float dist = sqrt(pow(row - center.x(), 2) + pow(col - center.y(), 2));

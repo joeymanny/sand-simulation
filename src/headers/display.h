@@ -41,10 +41,9 @@ class Slider {
 		void setMax(float);
 		float getValue() const;
 		void setValue(float);
-		void drawSlider(ScreenPixels);
+		void drawSlider(std::vector<unsigned int>* pixels);
 };
 
-void circle(const ScreenPixels& pixels, const Vec2& center, int radius, unsigned int color);
+void circle(std::vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color);
 
-void setPixel(const ScreenPixels& pixels, int pixelX, int pixelY, unsigned int color);
-
+void setPixel(std::vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int color);

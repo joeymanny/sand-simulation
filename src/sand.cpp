@@ -2,10 +2,12 @@
  * Implementations for the SandGrain class
  */
 
+#include <SDL3/SDL_log.h>
+
 #include "headers/sand.h"
 #include "headers/math.h"
 #include "headers/interactions.h"
-#include <SDL3/SDL_log.h>
+#include "headers/common.h"
 
 SandGrain::SandGrain(const Vec2& startingPosition) {
 	position = startingPosition;
@@ -21,7 +23,11 @@ void SandGrain::updateVelocity(SDL_Time dt) {
 }
 
 void SandGrain::updatePosition(SDL_Time dt) {
-	position.addAssign(velocity.scale(dtToSec(dt)));
+	if (detectScreenBoundsCollision(position, velocity, RADIUS, dt)) {
+		acceleration.set(0, 0);
+		velocity.set(0, 0);
+	} else
+		position.addAssign(velocity.scale(dtToSec(dt)));
 }
 
 // add other stuff

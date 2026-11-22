@@ -18,10 +18,9 @@
 #include "headers/sand.h"
 #include "headers/interactions.h"
 #include "headers/display.h"
+#include "headers/common.h"
 
 // Global constants
-constexpr int SCREEN_WIDTH = 640;
-constexpr int SCREEN_HEIGHT = 480;
 constexpr int FPS_LIMIT = 60;
 constexpr long NS_PER_FRAME = 1000000000 / FPS_LIMIT;
 
@@ -87,14 +86,12 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	for (vector<vector<SandGrain>>& row : grid.the)
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col)
-				circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
+				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 
 	sliders[FRICTION].setValue(sliders[FRICTION].getValue() + 0.1);
 	for (int i = 0; i < NUM_SLIDERS; i++){
-		sliders[i].drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
+		sliders[i].drawSlider(&pixelData);
 	}
-	// sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.1);
-	// sliderAirResistance.drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);

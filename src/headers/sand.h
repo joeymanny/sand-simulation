@@ -17,7 +17,9 @@ class SandGrain {
 		double frictionMult = 0.6;
 		double gravityAccel = (2 << 7) + (2 << 6);
 
+
 	public:
+		static int screenWidth, screenHeight;
 		static constexpr double RADIUS = 20; // In pixels
 
 		// Constructor (do `SandGrain grain({x, y})` to initialize)

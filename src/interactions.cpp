@@ -2,8 +2,11 @@
  * Implements the definitions in interactions.h
  */
 
-#include "headers/interactions.h"
 #include <SDL3/SDL_log.h>
+
+#include "headers/interactions.h"
+#include "headers/math.h"
+#include "headers/common.h"
 
 SandGrid::SandGrid(int screenWidth, int screenHeight) {
 	cellsX = screenWidth / GRID_CELL_WIDTH;
@@ -16,6 +19,7 @@ SandGrid::SandGrid(int screenWidth, int screenHeight) {
 
 void SandGrid::addParticle(const Vec2& pos) {
 	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(SandGrain(pos));
+	sandCount++;
 }
 
 void SandGrid::updateGridPlacements() {
@@ -32,6 +36,15 @@ void SandGrid::updateGridPlacements() {
 				} else
 					grain++;
 			}
+}
+
+int SandGrid::getSandCount() const {
+	return sandCount;
+}
+
+bool detectScreenBoundsCollision(const Vec2& startPos, const Vec2& velocity, const double& radius, const double& dt) {
+	Vec2 newPosition = startPos.add(velocity.scale(dtToSec(dt)));
+	return newPosition.x() + radius >= SCREEN_WIDTH || newPosition.x() - radius < 0 || newPosition.y() + radius > SCREEN_HEIGHT || newPosition.y() - radius < 0;
 }
 
 // stuff needed

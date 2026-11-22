@@ -13,6 +13,8 @@ using namespace std;
 
 // Sand state
 class SandGrid {
+	private:
+		int sandCount = 0;
 	public:
 		// Width AND height of cell grid
 		static constexpr int GRID_CELL_WIDTH = 10;
@@ -37,9 +39,14 @@ class SandGrid {
 		// Remove a random sand particle from the grid
 		void removeParticle();
 
+		// Get the sand particle count
+		int getSandCount() const;
+
 		// Update grid placements for position updates
 		void updateGridPlacements();
 };
+
+bool detectScreenBoundsCollision(const Vec2& startPos, const Vec2& velocity, const double& radius, const double& dt);
 
 // stuff needed
 // One thing to have is a function to convert particle positions to screen coordinates based on window size and zoom
