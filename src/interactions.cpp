@@ -35,3 +35,18 @@ void SandGrid::updateGridPlacements() {
 }
 
 // stuff needed
+
+// 1. Find time at which the particles interact (between 0 and 1 tick)
+//      1a. Relative Velocity = (ending - starting pos 1) - (ending - starting pos 2)
+//      1b. Relative Pos = starting pos 1 - starting pos 2
+//      1c. var1 = dot (relative velocity, realative velocity)
+//      1d. var2 = 2 * dot(relative pos 1, relative velcoity)
+//      1e. var3 = dot(relative pos 1, relative pos 1) - 4 * pow(radius,2)
+//      1f. Time = min((-var2 - sqrt(pow(var2,2) [+/-] 4 * var1 * var3)) / (2 * var1))
+//      Note: if time is between 0 and 1, the particles do not interact
+// 2. Find the point at which they interact
+//      2a. Point of Collision for particle 1: starting pt 1 + Time * (ending pt 1 - starting pt 1)
+//      2b. Point of Collision for particle 2: starting pt 2 + Time * (ending pt 2 - starting pt 2)
+// 3. Find Ending Position after Collision
+//      3a. Relative Normal Vector = (Relative pos + Relative Velocity * Time) / (2* Radius)
+//      3b.
