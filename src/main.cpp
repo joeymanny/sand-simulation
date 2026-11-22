@@ -154,7 +154,7 @@ int main() {
 	// testParticle1.instantAccelerate({400, 200});
 	// grid.addParticle(&testParticle1);
 	SandGrain testParticle2({400, 200});
-	testParticle2.instantAccelerate({-600, 0});
+	testParticle2.instantAccelerate({-500, 0});
 	grid.addParticle(&testParticle2);
 
 	// Main loop

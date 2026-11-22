@@ -9,7 +9,7 @@
 #include "headers/math.h"
 #include "headers/interactions.h"
 
-#define VELOCITY_STOP_THRESHOLD 10
+#define VELOCITY_STOP_THRESHOLD 200
 
 SandGrain::SandGrain(const Vec2& startingPosition) {
 	position = startingPosition;
