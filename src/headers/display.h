@@ -14,6 +14,14 @@ struct ScreenPixels {
 	int screenHeight;
 };
 
+constexpr int NUM_SLIDERS = 2;
+
+enum ProgramSlider{
+	FRICTION,
+	PLATFORM,
+	NONE,
+};
+
 class Slider {
 	private:
 		int xPos;

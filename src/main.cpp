@@ -37,7 +37,14 @@ vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
-Slider sliderAirResistance(10,10, 5.0, 10.0, 7.0);
+// number of sliders is in NUM_SLIDERS constant
+// this is an array of sliders
+Slider sliders[NUM_SLIDERS] = {
+	// slider construction:
+	// {xPos, yPos, minVal, maxVal, value}
+	{10,10, 5.0, 10.0, 7.0}, // Friction slider, accessible with sliders[FRICTION]
+	{10, 20, 50.0, SCREEN_WIDTH - 100, 300} // Platform slider, accessible with slider[PLATFORM]
+};
 // constexpr int SLIDER_AIR_RES_INDEX = 0;
 // float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
@@ -82,8 +89,12 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col)
 				circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 
-	sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.1);
-	sliderAirResistance.drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
+	sliders[FRICTION].setValue(sliders[FRICTION].getValue() + 0.1);
+	for (int i = 0; i < NUM_SLIDERS; i++){
+		sliders[i].drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
+	}
+	// sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.1);
+	// sliderAirResistance.drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
