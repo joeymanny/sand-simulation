@@ -23,40 +23,40 @@ Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue){
 	maxVal = inMax;
 	value = clamp(inValue, minVal, maxVal);
 }
-int Slider::x(){
+int Slider::x() {
 	return xPos;
 }
-int Slider::y(){
+int Slider::y() {
 	return yPos;
 }
-void Slider::setX(int newX){
+void Slider::setX(int newX) {
 	xPos = newX;
 }
- void Slider::setY(int newY){
+void Slider::setY(int newY) {
 	yPos = newY;
 }
-float Slider::getMin(){
+float Slider::getMin() const {
 	return minVal;
 }
-void Slider::setMin(float newMin){
+void Slider::setMin(float newMin) {
 	minVal = newMin;
 }
-float Slider::getMax(){
+float Slider::getMax() const{
 	return maxVal;
 }
-void Slider::setMax(float newMax){
+void Slider::setMax(float newMax) {
 	maxVal = newMax;
 }
-float Slider::getValue(){
+float Slider::getValue() const {
 	return value;
 }
-void Slider::setValue(float newValue){
+void Slider::setValue(float newValue) {
 	value = clamp(newValue, minVal, maxVal);
 }
 // sliders are drawn starting at their position going SLIDER_WIDTH to the right
 // they are a wide rectangle with a red circle drawn to indicate value
 // don't place it too close to the right edge, it doesnt do any edge detection
-void Slider::drawSlider(a pixels){
+void Slider::drawSlider(ScreenPixels pixels){
 	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
 		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
 			setPixel(pixels, col, row, 0xFFFFFFFF);
@@ -70,13 +70,13 @@ void Slider::drawSlider(a pixels){
 	);
 }
 
-void setPixel(const a& pixels, int pixelX, int pixelY, unsigned int color) {
+void setPixel(const ScreenPixels& pixels, int pixelX, int pixelY, unsigned int color) {
 	if (pixelY > 0 && pixelY < pixels.screenHeight && pixelX > 0 && pixelX < pixels.screenWidth) {
 		pixels.pixelData->at(pixels.screenWidth * pixelY + pixelX) = color;
 	}
 }
 
-void circle(const a& pixels, const Vec2& center, int radius, unsigned int color) {
+void circle(const ScreenPixels& pixels, const Vec2& center, int radius, unsigned int color) {
 	for (int row = center.x() - radius; row <= center.x() + radius; row++) {
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
 			float dist = sqrt(pow(row - center.x(), 2) + pow(col - center.y(), 2));

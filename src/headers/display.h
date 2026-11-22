@@ -8,7 +8,7 @@
 
 typedef std::vector<unsigned int> PixelList;
 
-struct a {
+struct ScreenPixels {
 	PixelList* pixelData;
 	int screenWidth;
 	int screenHeight;
@@ -27,17 +27,17 @@ class Slider {
 		int y();
 		void setX(int);
 		void setY(int);
-		float getMin();
+		float getMin() const;
 		void setMin(float);
-		float getMax();
+		float getMax() const;
 		void setMax(float);
-		float getValue();
+		float getValue() const;
 		void setValue(float);
-		void drawSlider(a);
+		void drawSlider(ScreenPixels);
 };
 
-void circle(const a& pixels, const Vec2& center, int radius, unsigned int color);
+void circle(const ScreenPixels& pixels, const Vec2& center, int radius, unsigned int color);
 
-void setPixel(const a& pixels, int pixelX, int pixelY, unsigned int color);
+void setPixel(const ScreenPixels& pixels, int pixelX, int pixelY, unsigned int color);
 
 template <typename T> void displaySlider(Vec2 location, T* value, T min, T max);

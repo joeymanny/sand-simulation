@@ -21,14 +21,14 @@ class Vec2 {
 		// Set a new x and y
 		void set(const double& x, const double& y);
 		// Get x value
-		double x() const;
+		const double& x() const;
 		// Get y value
-		double y() const;
+		const double& y() const;
 
 		// Returns the length of the ray formed by the vector components
-		double magnitude() const;
+		const double& magnitude() const;
 		// Returns the angle of the vector as if it were on the unit circle
-		double direction() const;
+		const double& direction() const;
 		// Returns the unit vector of this vector's direction
 		Vec2 unit() const;
 

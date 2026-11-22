@@ -32,5 +32,5 @@ class SandGrain {
 		void instantAccelerate(const Vec2& velocity);
 
 		// Get position
-		Vec2 getPosition() const;
+		const Vec2& getPosition() const;
 };

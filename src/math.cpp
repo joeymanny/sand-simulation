@@ -31,18 +31,18 @@ void Vec2::set(const double& x, const double& y) {
 	unitY = yPos / mag;
 }
 
-double Vec2::x() const {
+const double& Vec2::x() const {
 	return xPos;
 }
-double Vec2::y() const {
+const double& Vec2::y() const {
 	return yPos;
 }
 
-double Vec2::magnitude() const {
+const double& Vec2::magnitude() const {
 	return mag;
 }
 
-double Vec2::direction() const {
+const double& Vec2::direction() const {
 	return dir;
 }
 
