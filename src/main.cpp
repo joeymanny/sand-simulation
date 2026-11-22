@@ -44,6 +44,7 @@ Slider sliders[NUM_SLIDERS] = {
 	{10,10, 5.0, 10.0, 7.0}, // Friction slider, accessible with sliders[FRICTION]
 	{10, 20, 50.0, SCREEN_WIDTH - 100, 300} // Platform slider, accessible with slider[PLATFORM]
 };
+ProgramSlider selectedSlider = ProgramSlider::NONE; // could also just do NONE
 // constexpr int SLIDER_AIR_RES_INDEX = 0;
 // float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
