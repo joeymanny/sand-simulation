@@ -38,6 +38,7 @@ SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
 Slider sliderAirResistance(10,10, 5.0, 10.0, 7.0);
+// constexpr int SLIDER_AIR_RES_INDEX = 0;
 // float sliderAirResistance = 1.0; // range from X to Y
 float sliderGravity = 9.8; // range form X to Y
 float sliderSandFriction = 1.0; // X to Y
@@ -81,7 +82,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col)
 				circle({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT}, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 
-	sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.001);
+	sliderAirResistance.setValue(sliderAirResistance.getValue() + 0.1);
 	sliderAirResistance.drawSlider({&pixelData, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	// Render the window
