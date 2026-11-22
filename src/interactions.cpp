@@ -14,7 +14,7 @@ SandGrid::SandGrid(int screenWidth, int screenHeight) {
 		row.resize(cellsX);
 }
 
-void SandGrid::addParticle(Vec2 pos) {
+void SandGrid::addParticle(const Vec2& pos) {
 	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(SandGrain(pos));
 }
 

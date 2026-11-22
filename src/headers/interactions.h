@@ -33,7 +33,7 @@ class SandGrid {
 		SandGrid(int screenWidth, int screenHeight);
 
 		// Add a sand particle to the grid
-		void addParticle(Vec2 pos);
+		void addParticle(const Vec2& pos);
 		// Remove a random sand particle from the grid
 		void removeParticle();
 

@@ -21,7 +21,7 @@ class SandGrain {
 		static constexpr double RADIUS = 20; // In pixels
 
 		// Constructor (do `SandGrain grain({x, y})` to initialize)
-		SandGrain(Vec2 initialPosition);
+		SandGrain(const Vec2& initialPosition);
 		// Intended to be ran every frame to update the velocity of the particle from the acceleration
 		// Acceleration is per-second-per second, but our timeframe is the time between frames "dt" instead of 1 second
 		void updateVelocity(SDL_Time dt);
@@ -29,7 +29,7 @@ class SandGrain {
 		// Velocity is per-second, but our timeframe is the time between frames "dt" instead of 1 second
 		void updatePosition(SDL_Time dt);
 		// Insantly accelerate the particle by adding `velocity` to the particle's velocity
-		void instantAccelerate(Vec2 velocity);
+		void instantAccelerate(const Vec2& velocity);
 
 		// Get position
 		Vec2 getPosition() const;

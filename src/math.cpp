@@ -7,21 +7,21 @@ using namespace std;
 
 #include "headers/math.h"
 
-Vec2::Vec2(double x, double y) {
+Vec2::Vec2(const double& x, const double& y) {
 	set(x, y);
 }
 Vec2::Vec2() {
 	set(0, 0);
 }
 
-Vec2 Vec2::fromMagnitudeDirection(double magnitude, double direction) {
+Vec2 Vec2::fromMagnitudeDirection(const double& magnitude, const double& direction) {
 	return Vec2(
 		magnitude * cos(direction), // x
 		magnitude * sin(direction)  // y
 	);
 }
 
-void Vec2::set(double x, double y) {
+void Vec2::set(const double& x, const double& y) {
 	// Set values once so that they don't have to be calculated every time
 	xPos = x;
 	yPos = y;
@@ -50,18 +50,18 @@ Vec2 Vec2::unit() const {
 	return Vec2(unitX, unitY);
 }
 
-double Vec2::dotProduct(Vec2 rhs) const {
+double Vec2::dotProduct(const Vec2& rhs) const {
 	return xPos * rhs.x() + yPos * rhs.y();
 }
 
-Vec2 Vec2::scale(double n) const {
+Vec2 Vec2::scale(const double& n) const {
 	return Vec2(
 		xPos * n,
 		yPos * n
 	);
 }
 
-void Vec2::scaleAssign(double n) {
+void Vec2::scaleAssign(const double& n) {
 	xPos *= n;
 	yPos *= n;
 }
@@ -70,6 +70,6 @@ Vec2 Vec2::add(Vec2 rhs) const {
 	return {xPos + rhs.x(), yPos + rhs.y()};
 }
 
-void Vec2::addAssign(Vec2 rhs) {
+void Vec2::addAssign(const Vec2& rhs) {
 	set(xPos + rhs.x(), yPos + rhs.y());
 }

@@ -59,10 +59,9 @@ void Slider::setValue(float newValue){
 void Slider::drawSlider(a pixels){
 	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
 		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
-			setPixel(&pixels, col, row, 0xFFFFFFFF);
+			setPixel(pixels, col, row, 0xFFFFFFFF);
 		}
 	}
-	SDL_Log("current val: %f", value);
 	circle(
 		pixels,
 		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / maxVal)), (float)yPos + (SLIDER_HEIGHT / 2.0)),
@@ -71,18 +70,18 @@ void Slider::drawSlider(a pixels){
 	);
 }
 
-void setPixel(a* pixels, int pixelX, int pixelY, unsigned int color) {
-	if (pixelY > 0 && pixelY < pixels->screenHeight && pixelX > 0 && pixelX < pixels->screenWidth) {
-		pixels->pixelData->at(pixels->screenWidth * pixelY + pixelX) = color;
+void setPixel(const a& pixels, int pixelX, int pixelY, unsigned int color) {
+	if (pixelY > 0 && pixelY < pixels.screenHeight && pixelX > 0 && pixelX < pixels.screenWidth) {
+		pixels.pixelData->at(pixels.screenWidth * pixelY + pixelX) = color;
 	}
 }
 
-void circle(a pixels, Vec2 center, int radius, unsigned int color) {
+void circle(const a& pixels, const Vec2& center, int radius, unsigned int color) {
 	for (int row = center.x() - radius; row <= center.x() + radius; row++) {
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
 			float dist = sqrt(pow(row - center.x(), 2) + pow(col - center.y(), 2));
 			if (dist <= radius) {
-				setPixel(&pixels, row, col, color);
+				setPixel(pixels, row, col, color);
 				// Border color and size
 				// if (fabs(dist - radius) < 5)
 				// 	setPixel(pixels, col, row, 0xFF0000FF);

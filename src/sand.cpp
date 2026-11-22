@@ -7,7 +7,7 @@
 #include "headers/interactions.h"
 #include <SDL3/SDL_log.h>
 
-SandGrain::SandGrain(Vec2 startingPosition) {
+SandGrain::SandGrain(const Vec2& startingPosition) {
 	position = startingPosition;
 	acceleration.set(0, gravityAccel);
 }

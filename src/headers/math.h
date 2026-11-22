@@ -11,15 +11,15 @@ class Vec2 {
 		double xPos, yPos, dir, mag, unitX, unitY;
 	public:
 		// Constructs a Vec2 from a given magnitude and direction
-		static Vec2 fromMagnitudeDirection(double magnitude, double direciton);
+		static Vec2 fromMagnitudeDirection(const double& magnitude, const double& direciton);
 
 		// Regular constructor
-		Vec2(double x, double y);
+		Vec2(const double& x, const double& y);
 		// Default constructor
 		Vec2();
 
 		// Set a new x and y
-		void set(double x, double y);
+		void set(const double& x, const double& y);
 		// Get x value
 		double x() const;
 		// Get y value
@@ -33,13 +33,13 @@ class Vec2 {
 		Vec2 unit() const;
 
 		// Returns the dot product of this vector and the `rhs` vector
-		double dotProduct(Vec2 rhs) const;
+		double dotProduct(const Vec2& rhs) const;
 		// Returns the vector multiplied by some scalar `n`
-		Vec2 scale(double n) const;
+		Vec2 scale(const double& n) const;
 		// scale() but assigns the output to the current vector
-		void scaleAssign(double n);
+		void scaleAssign(const double& n);
 		// vec1 + vec2
-		Vec2 add(Vec2 rhs) const;
+		Vec2 add(const Vec2 rhs) const;
 		// vec1 += vec2;
-		void addAssign(Vec2 rhs);
+		void addAssign(const Vec2& rhs);
 };
