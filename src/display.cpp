@@ -64,7 +64,7 @@ void Slider::drawSlider(ScreenPixels pixels){
 	}
 	circle(
 		pixels,
-		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / maxVal)), (float)yPos + (SLIDER_HEIGHT / 2.0)),
+		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal))), (float)yPos + (SLIDER_HEIGHT / 2.0)),
 		SLIDER_CIRCLE_RADIUS,
 		0xFF0000FF
 	);
