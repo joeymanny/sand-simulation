@@ -49,4 +49,8 @@ void SandGrid::updateGridPlacements() {
 //      2b. Point of Collision for particle 2: starting pt 2 + Time * (ending pt 2 - starting pt 2)
 // 3. Find Ending Position after Collision
 //      3a. Relative Normal Vector = (Relative pos + Relative Velocity * Time) / (2* Radius)
-//      3b.
+//      3b. Difference in Velocities = Velocity of 1 - Velocity of 2
+//      3c. New Velociy of 1 = Velocity of 1 - dot(dot(diff of velo, relative normal), relative normal)
+//      3d. New Velociy of 2 = Velocity of 2 + dot(dot(diff of velo, relative normal), relative normal)
+//      3e. Ending Pos 1 = Velocity of 1 * t + (1 - friction) * (1 - Time) * New Velocity of 1
+//      3e. Ending Pos 2 = Velocity of 2 * t + (1 - friction) * (1 - Time) * New Velocity of 2
