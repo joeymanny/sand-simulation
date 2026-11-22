@@ -3,6 +3,7 @@
  */
 
 #include <SDL3/SDL_log.h>
+#include <cmath>
 
 #include "headers/interactions.h"
 #include "headers/math.h"
@@ -19,6 +20,11 @@ SandGrid::SandGrid(int screenWidth, int screenHeight) {
 
 void SandGrid::addParticle(const Vec2& pos) {
 	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(SandGrain(pos));
+	sandCount++;
+}
+void SandGrid::addParticle(SandGrain *grain) {
+	Vec2 pos = grain->getPosition();
+	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(*grain);
 	sandCount++;
 }
 
@@ -45,6 +51,59 @@ int SandGrid::getSandCount() const {
 bool detectScreenBoundsCollision(const Vec2& startPos, const Vec2& velocity, const double& radius, const double& dt) {
 	Vec2 newPosition = startPos.add(velocity.scale(dtToSec(dt)));
 	return newPosition.x() + radius >= SCREEN_WIDTH || newPosition.x() - radius < 0 || newPosition.y() + radius > SCREEN_HEIGHT || newPosition.y() - radius < 0;
+}
+
+void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, const double& dt) {
+	Vec2 newPosition = startPos->add(velocity->scale(dtToSec(dt)));
+
+	// X-axis reflection
+	bool xReflect = false;
+	double rightExtraX = newPosition.x() + radius - SCREEN_WIDTH;
+	double leftExtraX = newPosition.x() - radius;
+	double cutoffX = newPosition.x();
+	double extraX = 0;
+	if (leftExtraX < 0) {
+		cutoffX = radius;
+		extraX = leftExtraX;
+		xReflect = true;
+	} else if (rightExtraX > 0) {
+		cutoffX = SCREEN_WIDTH - radius;
+		extraX = rightExtraX;
+		xReflect = true;
+	}
+	if (xReflect)
+		velocity->set(-velocity->x(), velocity->y());
+
+	// Y-axis reflection
+	bool yReflect = false;
+	double bottomExtraY = newPosition.y() + radius - SCREEN_HEIGHT;
+	double topExtraY = newPosition.y() - radius;
+	double cutoffY = newPosition.y();
+	double extraY = 0;
+	if (topExtraY < 0) {
+		cutoffY = radius;
+		extraY = topExtraY;
+		yReflect = true;
+	} else if (bottomExtraY > 0) {
+		cutoffY = SCREEN_HEIGHT - radius;
+		extraY = bottomExtraY;
+		yReflect = true;
+	}
+	if (yReflect) {
+		velocity->set(velocity->x(), -velocity->y());
+	}
+
+	// Combine reflections to update position
+	startPos->set(cutoffX - extraX, cutoffY - extraY);
+}
+
+void screenBoundStop(Vec2* startPos, Vec2* velocity, const double& radius) {
+	Vec2 relativeVector = (startPos->add(*velocity).add(startPos->negate()));
+	double yDistance = SCREEN_HEIGHT - radius - startPos->y();
+	double xDistance = 8 * (relativeVector.x() / relativeVector.y());
+
+	velocity->set(0, 0);
+	startPos->addAssign({xDistance, yDistance});
 }
 
 // stuff needed

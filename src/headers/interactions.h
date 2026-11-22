@@ -36,6 +36,8 @@ class SandGrid {
 
 		// Add a sand particle to the grid
 		void addParticle(const Vec2& pos);
+		// Add a sand particle to the grid
+		void addParticle(SandGrain* grain);
 		// Remove a random sand particle from the grid
 		void removeParticle();
 
@@ -47,6 +49,9 @@ class SandGrid {
 };
 
 bool detectScreenBoundsCollision(const Vec2& startPos, const Vec2& velocity, const double& radius, const double& dt);
+
+void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, const double& dt);
+void screenBoundStop(Vec2* startPos, Vec2* velocity, const double& radius);
 
 // stuff needed
 // One thing to have is a function to convert particle positions to screen coordinates based on window size and zoom

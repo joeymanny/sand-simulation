@@ -2,3 +2,4 @@
 
 inline constexpr int SCREEN_WIDTH = 640;
 inline constexpr int SCREEN_HEIGHT = 480;
+inline constexpr double AIR_RESISTANCE_SUB_MOD = 0.05;

@@ -73,3 +73,11 @@ Vec2 Vec2::add(Vec2 rhs) const {
 void Vec2::addAssign(const Vec2& rhs) {
 	set(xPos + rhs.x(), yPos + rhs.y());
 }
+
+Vec2 Vec2::negate() const {
+	return {-xPos, -yPos};
+}
+void Vec2::negateAssign() {
+	xPos = -xPos;
+	yPos = -yPos;
+}

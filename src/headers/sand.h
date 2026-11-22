@@ -15,11 +15,10 @@ class SandGrain {
 		// Particle properties
 		Vec2 position, velocity, acceleration;
 		double frictionMult = 0.6;
-		double gravityAccel = (2 << 7) + (2 << 6);
-
+		double gravityAccel = (1 << 7) + (1 << 6);
+		bool stationary = false;
 
 	public:
-		static int screenWidth, screenHeight;
 		static constexpr double RADIUS = 20; // In pixels
 
 		// Constructor (do `SandGrain grain({x, y})` to initialize)

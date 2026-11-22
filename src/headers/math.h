@@ -42,4 +42,8 @@ class Vec2 {
 		Vec2 add(const Vec2 rhs) const;
 		// vec1 += vec2;
 		void addAssign(const Vec2& rhs);
+		// -vec
+		Vec2 negate() const;
+		// -vec but modifies
+		void negateAssign();
 };
