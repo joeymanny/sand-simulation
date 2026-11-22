@@ -44,8 +44,8 @@ SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 Slider sliders[NUM_SLIDERS] = {
 	// slider construction:
 	// {xPos, yPos, minVal, maxVal, value}
-	{10,10, 5.0, 10.0, 7.0}, // Friction slider, accessible with sliders[FRICTION]
-	{10, 20, 50.0, SCREEN_WIDTH - 100, 300} // Platform slider, accessible with slider[PLATFORM]
+	{10,10, 5.0, 10.0, 7.0}, // Friction slider, accessible with sliders[FRICTION].getValue()
+	{10, 20, 50.0, SCREEN_WIDTH - 100, 300} // Platform slider, accessible with slider[PLATFORM].getValue()
 };
 ProgramSlider selectedSlider = ProgramSlider::NONE; // could also just do NONE
 // constexpr int SLIDER_AIR_RES_INDEX = 0;
