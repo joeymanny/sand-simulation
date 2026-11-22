@@ -119,7 +119,7 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	grid.addParticle({320, 400});
+	grid.addParticle({320, 100});
 
 	// Main loop
 	while (loop(&e, dt)) {

@@ -15,7 +15,7 @@ class SandGrain {
 		// Particle properties
 		Vec2 position, velocity, acceleration;
 		double frictionMult = 0.6;
-		double gravityAccel = 2 << 8;
+		double gravityAccel = (2 << 7) + (2 << 6);
 
 	public:
 		static constexpr double RADIUS = 20; // In pixels
