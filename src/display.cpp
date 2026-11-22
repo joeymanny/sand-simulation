@@ -54,6 +54,18 @@ float Slider::getValue() const {
 void Slider::setValue(float newValue) {
 	value = clamp(newValue, minVal, maxVal);
 }
+bool Slider::isClickWithin(int x, int y){
+	
+	int sliderX = ((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal)))) - SLIDER_CIRCLE_RADIUS;
+	int sliderY = ((float)yPos + (SLIDER_HEIGHT / 2.0)) - SLIDER_CIRCLE_RADIUS;
+	return x > sliderX && x < (sliderX + SLIDER_CIRCLE_RADIUS * 2.0) && y > sliderY && y < (sliderY + SLIDER_CIRCLE_RADIUS * 2.0);
+}
+
+void Slider::updateValFromMouseMotion(float absX, float deltaX){
+	if (absX < xPos + SLIDER_WIDTH && absX > xPos){
+		this->setValue(this->getValue() +  (deltaX / SLIDER_WIDTH) * (maxVal - minVal));
+	}
+}
 // sliders are drawn starting at their position going SLIDER_WIDTH to the right
 // they are a wide rectangle with a red circle drawn to indicate value
 // don't place it too close to the right edge, it doesnt do any edge detection

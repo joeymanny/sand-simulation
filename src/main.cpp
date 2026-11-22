@@ -9,6 +9,8 @@
 
 // Simple Directmedia Layer
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_log.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_time.h>
 #include <SDL3/SDL_video.h>
@@ -69,6 +71,22 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		if (e->type == SDL_EVENT_QUIT) {
 			return false;
 		}
+		if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
+			for (int i = 0; i < NUM_SLIDERS; i++){
+				if (sliders[i].isClickWithin(e->motion.x, e->motion.y)){
+					selectedSlider = (ProgramSlider)i;
+				}
+			}
+		}
+		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP){
+			selectedSlider = ProgramSlider::NONE;
+		}
+		if (e->type == SDL_EVENT_MOUSE_MOTION){
+			if (selectedSlider != NONE){
+				SDL_Log("mouse motion: %f",e->motion.xrel);
+				sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
+			}
+		}
 	}
 
 	// Refresh framebuffer to all black
@@ -89,7 +107,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col)
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 
-	sliders[FRICTION].setValue(sliders[FRICTION].getValue() + 0.1);
 	for (int i = 0; i < NUM_SLIDERS; i++){
 		sliders[i].drawSlider(&pixelData);
 	}
