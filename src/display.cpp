@@ -15,7 +15,7 @@ using namespace std;
 
 constexpr int SLIDER_WIDTH = 100;
 constexpr int SLIDER_HEIGHT = 4;
-constexpr int SLIDER_CIRCLE_RADIUS = 6;
+constexpr int SLIDER_CIRCLE_RADIUS = 8;
 
 Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue){
 	xPos = inXPos;
@@ -62,7 +62,7 @@ bool Slider::isClickWithin(int x, int y){
 }
 
 void Slider::updateValFromMouseMotion(float absX, float deltaX){
-	if (absX < xPos + SLIDER_WIDTH && absX > xPos){
+	if (absX < xPos + SLIDER_WIDTH + SLIDER_CIRCLE_RADIUS && absX > xPos - SLIDER_CIRCLE_RADIUS){
 		this->setValue(this->getValue() +  (deltaX / SLIDER_WIDTH) * (maxVal - minVal));
 	}
 }
