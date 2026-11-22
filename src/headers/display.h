@@ -40,4 +40,3 @@ void circle(const ScreenPixels& pixels, const Vec2& center, int radius, unsigned
 
 void setPixel(const ScreenPixels& pixels, int pixelX, int pixelY, unsigned int color);
 
-template <typename T> void displaySlider(Vec2 location, T* value, T min, T max);
