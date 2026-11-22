@@ -120,6 +120,7 @@ int main() {
 
 	// Initialize particles
 	grid.addParticle({320, 100});
+	grid.addParticle({400, 50});
 
 	// Main loop
 	while (loop(&e, dt)) {
