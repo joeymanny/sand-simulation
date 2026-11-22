@@ -88,6 +88,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 				// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
 			}
 		}
+		// TODO: reset button to reset simulation while keeping slider values the same
 	}
 
 	// Refresh framebuffer to all black

@@ -13,14 +13,6 @@ constexpr int SLIDER_HEIGHT = 4;
 constexpr int SLIDER_CIRCLE_RADIUS = 8;
 constexpr int SLIDER_BOUNDS_GRACE = 1;
 
-typedef std::vector<unsigned int> PixelList;
-
-struct ScreenPixels {
-	PixelList* pixelData;
-	int screenWidth;
-	int screenHeight;
-};
-
 // this const must be updated by hand
 // it must EXCLUDE the NONE variant
 constexpr int NUM_SLIDERS = 2; // READ COMMENT PLS
@@ -56,7 +48,7 @@ class Slider {
 		void setMin(float newMin);
 		// get slider's maximum value
 		float getMax() const;
-		// set slider's maximum value 
+		// set slider's maximum value
 		void setMax(float newMax);
 		// get slider's current value, which get updated as user
 		// slides the slider
