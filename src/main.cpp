@@ -35,7 +35,7 @@ SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 SDL_Texture* pixelTexture = nullptr;
 vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
-vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
+// vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // variables for holding user's desired communicated by sliders
@@ -99,15 +99,15 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col) {
 				grain.updateVelocity(dt);
 				grain.updatePosition(dt);
-				grid.updateGridPlacements();
 			}
 
 	// Render pixels (update to density map later)
 	for (vector<vector<SandGrain>>& row : grid.the)
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col) {
+				grid.updateGridPlacements();
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
-				circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
+				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 			}
 
 	for (int i = 0; i < NUM_SLIDERS; i++){
@@ -117,8 +117,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
 	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
-	SDL_UpdateTexture(pixelTexture, NULL, permanentTrail.data(), SCREEN_WIDTH * 4);
-	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
+	// SDL_UpdateTexture(pixelTexture, NULL, permanentTrail.data(), SCREEN_WIDTH * 4);
+	// SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
 
 	// General idea of process:
 	// 1. Calculate collisions and accelerate particles as needed
@@ -196,10 +196,10 @@ bool windowInit() {
 		return false;
 	}
 	// Initialize VSync
-	// if (!SDL_SetRenderVSync(renderer, 1)) {
-	// 	SDL_Log("VSync Init error: %s", SDL_GetError());
-	// 	return false;
-	// }
+	if (!SDL_SetRenderVSync(renderer, 1)) {
+		SDL_Log("VSync Init error: %s", SDL_GetError());
+		return false;
+	}
 
 	pixelTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
