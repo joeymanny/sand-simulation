@@ -114,6 +114,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		sliders[i].drawSlider(&pixelData);
 	}
 
+	// TEST
+	drawText(&pixelData, {20.0,200.0}, 2.0, 0xFFFFFFFF, "111.111 111");
+	// setSquare(&pixelData, {200,200}, 20.0, 0xFFFFFFFF);
+	// TEST
+
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
 	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);

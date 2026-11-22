@@ -4,6 +4,8 @@
  */
 #include <SDL3/SDL_render.h>
 #include <vector>
+#include <string>
+
 #include "math.h"
 
 typedef std::vector<unsigned int> PixelList;
@@ -71,3 +73,20 @@ class Slider {
 void circle(std::vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color);
 
 void setPixel(std::vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int color);
+
+void setRect(std::vector<unsigned int>* pixels, const Vec2& location, const Vec2& size, unsigned int color);
+
+void setSquare(std::vector<unsigned int>* pixels, const Vec2& location, float size, unsigned int color);
+
+// draws some blocky text. location is at the very top-left corner of the text. a scale of 1.0 indicates
+// each "pixel" of the text is the same size as a screen pixel. monospace: every character is 5 "scale"s wide
+// by 7 "scale"s tall, plus one padding "scale" between each character (so 6 "scale"s wide)
+void drawText(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, std::string text);
+
+// returns whether a char will be drawn when passed into drawChar or not
+bool isDrawable(char c);
+
+// draws a character as a given location. location is at the very top-left of the character. returns the width
+// of the drawn character. a scale of 1.0 means each "pixel" of the character is one screen pixel in size.
+// drawn character will be 5 "scale"s wide by 7 "scale"s tall
+void drawChar(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, char c);

@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <string>
 using namespace std;
 
 constexpr int SLIDER_WIDTH = 100;
@@ -89,6 +90,20 @@ void setPixel(vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int
 	}
 }
 
+void setRect(vector<unsigned int>* pixels, const Vec2& location, const Vec2& size, unsigned int color){
+	// TODO do this is a less naive way. surely vectors have a way of setting a range of values
+	// to the same value, right?
+	for (int i = floor(location.x()); i < floor(location.x() + size.x()); i++){
+		for (int j = floor(location.y()); j < floor(location.y() + size.y()); j++){
+			setPixel(pixels, i, j, color);
+		}
+	}
+}
+
+void setSquare(vector<unsigned int>* pixels, const Vec2& location, float size, unsigned int color){
+	setRect(pixels, location, {size, size}, color);
+}
+
 void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color) {
 	for (int row = center.x() - radius; row <= center.x() + radius; row++) {
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
@@ -102,3 +117,36 @@ void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsign
 		}
 	}
 }
+
+
+void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, string text){
+	float drawCursorX = location.x();
+	float drawCursorY = location.y();
+	for (char c : text){
+		drawChar(pixels, {drawCursorX, drawCursorY}, scale, color, c);
+		// one extra for padding
+		drawCursorX += 6.0 * scale;
+	}
+}
+
+// returns width of drawn character
+//  5 factors wide by 7 factor tall
+void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, char c){
+	// TODO
+	switch (c){
+		case '1':
+			// draw stem of the '1'
+			setRect(pixels, {location.x() + 2.0 * scale, location.y()}, {scale, 7.0 * scale}, color);
+			// draw the base of the '1'
+			setRect(pixels, {location.x(), location.y() + 6.0 * scale}, {5.0 * scale, scale}, color);
+			// draw the lil nose thingy
+			setSquare(pixels, {location.x() + scale, location.y() + scale}, scale, color);
+		break;
+		case '.':
+			setSquare(pixels, {location.x() + 2.0 * scale, location.y() + 6.0 * scale}, scale, color);
+		break;
+		default:
+		break;
+	}
+}
+
