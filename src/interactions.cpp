@@ -71,8 +71,10 @@ void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, co
 		extraX = rightExtraX;
 		xReflect = true;
 	}
-	if (xReflect)
+	if (xReflect) {
 		velocity->set(-velocity->x(), velocity->y());
+		velocity->addAssign(velocity->scale(BOUNCE_VELOCITY_LOSS_MOD).negate());
+	}
 
 	// Y-axis reflection
 	bool yReflect = false;
@@ -91,6 +93,7 @@ void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, co
 	}
 	if (yReflect) {
 		velocity->set(velocity->x(), -velocity->y());
+		velocity->addAssign(velocity->scale(BOUNCE_VELOCITY_LOSS_MOD).negate());
 	}
 
 	// Combine reflections to update position
