@@ -67,7 +67,7 @@ void Slider::updateValFromMouseMotion(float absX, float deltaX){
 // sliders are drawn starting at their position going SLIDER_WIDTH to the right
 // they are a wide rectangle with a red circle drawn to indicate value
 // don't place it too close to the right edge, it doesnt do any edge detection
-void Slider::drawSlider(vector<unsigned int>* pixels){
+void Slider::drawSlider(vector<unsigned int>* pixels,bool drawAsPressed){
 	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
 		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
 			setPixel(pixels, col, row, 0xFFFFFFFF);
@@ -77,7 +77,7 @@ void Slider::drawSlider(vector<unsigned int>* pixels){
 		pixels,
 		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal))), (float)yPos + (SLIDER_HEIGHT / 2.0)),
 		SLIDER_CIRCLE_RADIUS,
-		0xFF0000FF
+		drawAsPressed ? 0xDD0000FF : 0xFF0000FF
 	);
 }
 

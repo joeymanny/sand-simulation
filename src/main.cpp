@@ -111,7 +111,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			}
 
 	for (int i = 0; i < NUM_SLIDERS; i++){
-		sliders[i].drawSlider(&pixelData);
+			sliders[i].drawSlider(&pixelData, i == selectedSlider);
 		drawText(&pixelData, {(double)(sliders[i].x() + SLIDER_WIDTH + 15),(double)sliders[i].y() - 2}, 1.0, 0xFFFFFFFF, to_string(sliders[i].getValue()));
 	}
 

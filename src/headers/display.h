@@ -71,7 +71,7 @@ class Slider {
 		// scales the input to match the min and max of the slider
 		void updateValFromMouseMotion(float absX, float deltaX);
 		// draw the slider onto the given pixel buffer
-		void drawSlider(std::vector<unsigned int>* pixels);
+		void drawSlider(std::vector<unsigned int>* pixels, bool drawAsPressed);
 };
 
 // draw a circle onto the given pixel buffer at the given position with the given radius and given color
