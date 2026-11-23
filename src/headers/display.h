@@ -69,17 +69,20 @@ class Slider {
 // draw a circle onto the given pixel buffer at the given position with the given radius and given color
 void circle(std::vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color);
 
+// Set a pixel to a certain color in the framebuffer
 void setPixel(std::vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int color);
 
+// Draw a rectangle
 void setRect(std::vector<unsigned int>* pixels, const Vec2& location, const Vec2& size, unsigned int color);
 
+// Draw a square
 void setSquare(std::vector<unsigned int>* pixels, const Vec2& location, float size, unsigned int color);
 
 // draws some blocky text. location is at the very top-left corner of the text. a scale of 1.0 indicates
 // each "pixel" of the text is the same size as a screen pixel. monospace: every character is 5 "scale"s wide
 // by 7 "scale"s tall, plus one padding "scale" between each character (so 6 "scale"s wide)
 // works best or whole-number values of scale, because floating point numbers get floor'd into pixel locations
-void drawText(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, std::string text);
+void drawText(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, const std::string& text);
 
 // draws a character as a given location. location is at the very top-left of the character. returns the width
 // of the drawn character. a scale of 1.0 means each "pixel" of the character is one screen pixel in size.

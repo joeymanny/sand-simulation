@@ -70,24 +70,22 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Handle events
 	while (SDL_PollEvent(e)) {
 		// Runs when the person closes the window
-		if (e->type == SDL_EVENT_QUIT) {
+		if (e->type == SDL_EVENT_QUIT)
 			return false;
-		}
 		// Detect mouse button-down when the cursor is inside of a slider circle
-		if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-			for (int i = 0; i < NUM_SLIDERS; i++){
-				if (sliders[i].isClickWithin(e->motion.x, e->motion.y)){
+		if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+			for (int i = 0; i < NUM_SLIDERS; i++) {
+				if (sliders[i].isClickWithin(e->motion.x, e->motion.y)) {
 					selectedSlider = (ProgramSlider)i;
 				}
 			}
 		}
 		// Detect mouse button-up to stop sliding
-		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP){
+		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP)
 			selectedSlider = ProgramSlider::NONE;
-		}
 		// Detect mouse motion for updating the sliders
-		if (e->type == SDL_EVENT_MOUSE_MOTION){
-			if (selectedSlider != NONE){
+		if (e->type == SDL_EVENT_MOUSE_MOTION) {
+			if (selectedSlider != NONE) {
 				sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
 				// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
 			}
@@ -101,32 +99,36 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Calculate particles
 	// Run updateVelocity to create a new velocity from acceleration,
 	// then run updatePosition to calculate the collisions and update the positions
-	for (vector<vector<SandGrain>>& row : grid.the)
-		for (vector<SandGrain>& col : row)
+	for (vector<vector<SandGrain>>& row : grid.the) {
+		for (vector<SandGrain>& col : row) {
 			for (SandGrain& grain : col) {
 				grain.updateVelocity(dt);
 				grain.updatePosition(dt);
 			}
+		}
+	}
 
 	// Render pixels (update to density map later)
 	// This just involves updating the grid placements for the particles,
 	// then rendering a circle for each particle
-	for (vector<vector<SandGrain>>& row : grid.the)
-		for (vector<SandGrain>& col : row)
+	for (vector<vector<SandGrain>>& row : grid.the) {
+		for (vector<SandGrain>& col : row) {
 			for (SandGrain& grain : col) {
 				grid.updateGridPlacements();
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 			}
+		}
+	}
 
 	// Draws each slider, its state, and its text value
-	for (int i = 0; i < NUM_SLIDERS; i++){
-			sliders[i].drawSlider(&pixelData, i == selectedSlider);
+	for (int i = 0; i < NUM_SLIDERS; i++) {
+		sliders[i].drawSlider(&pixelData, i == selectedSlider);
 		drawText(&pixelData, {(double)(sliders[i].x() + SLIDER_WIDTH + 15),(double)sliders[i].y() - 2}, 1.0, 0xFFFFFFFF, to_string(sliders[i].getValue()));
 	}
 
 	// TEST
-	drawText(&pixelData, {20.0,200.0}, 4.0, 0xFFFFFFFF, "1234567890.2 1234567890");
+	// drawText(&pixelData, {20.0,200.0}, 4.0, 0xFFFFFFFF, "1234567890.2 1234567890");
 	// setSquare(&pixelData, {200,200}, 20.0, 0xFFFFFFFF);
 	// TEST
 
