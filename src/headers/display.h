@@ -8,6 +8,10 @@
 
 #include "math.h"
 
+constexpr int SLIDER_WIDTH = 100;
+constexpr int SLIDER_HEIGHT = 4;
+constexpr int SLIDER_CIRCLE_RADIUS = 8;
+
 typedef std::vector<unsigned int> PixelList;
 
 struct ScreenPixels {
@@ -81,6 +85,7 @@ void setSquare(std::vector<unsigned int>* pixels, const Vec2& location, float si
 // draws some blocky text. location is at the very top-left corner of the text. a scale of 1.0 indicates
 // each "pixel" of the text is the same size as a screen pixel. monospace: every character is 5 "scale"s wide
 // by 7 "scale"s tall, plus one padding "scale" between each character (so 6 "scale"s wide)
+// works best or whole-number values of scale, because floating point numbers get floor'd into pixel locations
 void drawText(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, std::string text);
 
 // returns whether a char will be drawn when passed into drawChar or not

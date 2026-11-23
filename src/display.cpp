@@ -14,9 +14,6 @@
 #include <string>
 using namespace std;
 
-constexpr int SLIDER_WIDTH = 100;
-constexpr int SLIDER_HEIGHT = 4;
-constexpr int SLIDER_CIRCLE_RADIUS = 8;
 
 Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue){
 	xPos = inXPos;
@@ -141,6 +138,136 @@ void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 			setRect(pixels, {location.x(), location.y() + 6.0 * scale}, {5.0 * scale, scale}, color);
 			// draw the lil nose thingy
 			setSquare(pixels, {location.x() + scale, location.y() + scale}, scale, color);
+		break;
+		case '2':
+			// hookey bit at the left
+			setSquare(pixels, {location.x(), location.y() + scale}, scale, color);
+			// top flat bit
+			setRect(pixels, {location.x() + scale, location.y()}, {scale * 3.0, scale}, color);
+			// right part of the curve
+			setRect(pixels, {location.x() + scale * 4.0, location.y() + scale}, {scale, scale * 2.0}, color);
+			// middle bit
+			setRect(pixels, {location.x() + 2.0 * scale, location.y() + scale * 3.0}, {scale * 2.0, scale}, color);
+			// connecting middle bit and base
+			setSquare(pixels, {location.x() + scale, location.y() + scale * 4.0}, scale, color);
+			// connecting previous bit to base
+			setSquare(pixels, {location.x(), location.y() + scale * 5.0}, scale, color);
+			// base
+			setRect(pixels, {location.x(), location.y() + 6.0 * scale}, {scale * 5.0, scale}, color);
+			// tail
+			setSquare(pixels, {location.x() + 4.0 * scale, location.y() + scale * 5.0}, scale, color);
+		break;
+		case '3':
+			// upper hookey bit at left
+			setSquare(pixels, {location.x(), location.y() + scale}, scale, color);
+			// top flat bit
+			setRect(pixels, {location.x() + scale, location.y()}, {scale * 3.0, scale}, color);
+			// right part of upper hook
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + scale}, {scale, 2.0 * scale}, color);
+			// middle bit
+			setRect(pixels, {location.x() + 2.0 * scale, location.y() + 3.0 * scale}, {2.0 * scale, scale}, color);
+			// right part of lower hook
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + scale * 4.0}, {scale, scale * 2.0}, color);
+			// bottom flat bit
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, { scale * 3.0, scale}, color);
+			// lower hookey bit at left
+			setSquare(pixels, {location.x(), location.y() + 5.0 * scale}, scale, color);
+			
+		break;
+		case '4':
+			// the diagonal bit
+			setSquare(pixels, {location.x() + 0.0 * scale, location.y() + 3.0 * scale}, scale, color);
+			setSquare(pixels, {location.x() + 1.0 * scale, location.y() + 2.0 * scale}, scale, color);
+			setSquare(pixels, {location.x() + 2.0 * scale, location.y() + 1.0 * scale}, scale, color);
+			setSquare(pixels, {location.x() + 3.0 * scale, location.y() + 0.0 * scale}, scale, color);
+			// the lower bar
+			setRect(pixels, {location.x(), location.y() + 4.0 * scale}, {scale * 4.0, scale}, color);
+			// the stem
+			setRect(pixels, {location.x() + 4.0 * scale, location.y()}, {scale, scale * 7}, color);
+		break;
+		case '5':
+			// top flat bit
+			setRect(pixels, {location.x(), location.y()}, {scale * 5, scale}, color);
+			// left step under flat bit
+			setRect(pixels, {location.x(), location.y() + scale,}, {scale, scale * 2.0}, color);
+			// top flat part of curve
+			setRect(pixels, {location.x() + scale, location.y() + 2.0 * scale}, {3.0 * scale, scale}, color);
+			// right part of curve
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + 3.0 * scale}, {scale, 3.0 * scale}, color);
+			// lower flat bit
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 *scale}, {3.0 * scale, scale}, color);
+			// the hookey bit at the back
+			setSquare(pixels, {location.x(), location.y() + 5.0 * scale}, scale, color);
+			
+		break;
+		case '6':
+			// top small flat bit
+			setRect(pixels, {location.x() + scale * 2, location.y()}, {scale * 2.0, scale}, color);
+			// connecting bit at upper left
+			setSquare(pixels,{location.x() + scale, location.y() + scale}, scale, color);
+			// back of the 6
+			setRect(pixels, {location.x(), location.y() + 2.0 * scale}, {scale, 4.0 * scale}, color);
+			// flat bottom part
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, {scale * 3.0, scale}, color);
+			// right flat bit aka right part of curve
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + 4.0 * scale}, {scale, 2.0 * scale}, color);
+			// top part off curve
+			setRect(pixels, {location.x() + scale, location.y() + scale * 3.0}, {3.0 * scale, scale}, color);
+		break;
+		case '7':
+			// hookey bit
+			setSquare(pixels, {location.x(), location.y() + scale}, scale, color);
+			// top flat bit
+			setRect(pixels, location, {scale * 5.0, scale}, color);
+			// back part of hook aka flat part at far right
+			setRect(pixels, {location.x() + scale * 4.0, location.y() + scale}, {scale, scale * 2.0}, color);
+			// connecting bit in the middle
+			setSquare(pixels, {location.x() + 3.0 * scale, location.y() + 3.0 * scale}, scale, color);
+			// stem
+			setRect(pixels, {location.x() + scale * 2.0, location.y() + scale * 4.0}, {scale, 3.0 * scale}, color);
+		break;
+		case '8':
+			// using symmetry...
+			// three horizontal bars
+			setRect(pixels, {location.x() + scale, location.y() + 0.0 * scale}, {3.0 * scale, scale}, color);
+			setRect(pixels, {location.x() + scale, location.y() + 3.0 * scale}, {3.0 * scale, scale}, color);
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, {3.0 * scale, scale}, color);
+			// two upper vertical bars
+			setRect(pixels, {location.x() + 0.0 * scale, location.y() + scale}, {scale, 2.0 * scale}, color);
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + scale}, {scale, 2.0 * scale}, color);
+			// two lower veritcal bars
+			setRect(pixels, {location.x() + 0.0 * scale, location.y() + 4.0 * scale}, {scale, 2.0 * scale}, color);
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + 4.0 * scale}, {scale, 2.0 * scale}, color);
+
+		break;
+		case '9':
+			// upper flat bit
+			setRect(pixels, {location.x() + scale, location.y()}, {3.0 * scale, scale}, color);
+			// left vertical bit
+			setRect(pixels, {location.x(), location.y() + scale}, {scale, scale * 2}, color);
+			// lower part of curv aka lower horizontal flat bit
+			setRect(pixels, {location.x() + scale, location.y() + 3.0 * scale}, {3.0 * scale, scale}, color);
+			// back of the nine aka right vertical flat bit
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + scale}, {scale, 4.0 * scale}, color);
+			// connecty bit in the lower middle right
+			setSquare(pixels, {location.x() + 3.0 * scale, location.y() + 5.0 * scale}, scale, color);
+			// bottom flat horizontal bit
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, {scale * 2.0, scale}, color);
+		break;
+		case '0':
+			// symmetry again...
+			// top of the zero
+			setRect(pixels, {location.x() + scale, location.y() + 0.0 * scale}, {3.0 * scale, scale}, color);
+			// bottom of the zero
+			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, {3.0 * scale, scale}, color);
+			// left of the zero
+			setRect(pixels, {location.x(), location.y() + scale}, {scale, 5.0 * scale}, color);
+			setRect(pixels, {location.x() + 4.0 * scale, location.y() + scale}, {scale, 5.0 * scale}, color);
+			// now the cross in the middle
+			setSquare(pixels, {location.x() + 1.0 * scale, location.y() + 4.0 * scale}, scale, color);
+			setSquare(pixels, {location.x() + 2.0 * scale, location.y() + 3.0 * scale}, scale, color);
+			setSquare(pixels, {location.x() + 3.0 * scale, location.y() + 2.0 * scale}, scale, color);
+		break;
 		break;
 		case '.':
 			setSquare(pixels, {location.x() + 2.0 * scale, location.y() + 6.0 * scale}, scale, color);

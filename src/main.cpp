@@ -112,10 +112,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 
 	for (int i = 0; i < NUM_SLIDERS; i++){
 		sliders[i].drawSlider(&pixelData);
+		drawText(&pixelData, {(double)(sliders[i].x() + SLIDER_WIDTH + 15),(double)sliders[i].y() - 2}, 1.0, 0xFFFFFFFF, to_string(sliders[i].getValue()));
 	}
 
 	// TEST
-	drawText(&pixelData, {20.0,200.0}, 2.0, 0xFFFFFFFF, "111.111 111");
+	drawText(&pixelData, {20.0,200.0}, 4.0, 0xFFFFFFFF, "1234567890.2 1234567890");
 	// setSquare(&pixelData, {200,200}, 20.0, 0xFFFFFFFF);
 	// TEST
 
