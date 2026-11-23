@@ -60,7 +60,7 @@ bool Slider::isClickWithin(int x, int y){
 }
 
 void Slider::updateValFromMouseMotion(float absX, float deltaX){
-	if (absX < xPos + SLIDER_WIDTH + SLIDER_CIRCLE_RADIUS && absX > xPos - SLIDER_CIRCLE_RADIUS){
+	if (absX < xPos + SLIDER_WIDTH + SLIDER_CIRCLE_RADIUS + SLIDER_BOUNDS_GRACE && absX > xPos - SLIDER_CIRCLE_RADIUS - SLIDER_BOUNDS_GRACE){
 		this->setValue(this->getValue() +  (deltaX / SLIDER_WIDTH) * (maxVal - minVal));
 	}
 }
@@ -114,7 +114,6 @@ void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsign
 		}
 	}
 }
-
 
 void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, string text){
 	float drawCursorX = location.x();
