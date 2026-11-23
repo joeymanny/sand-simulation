@@ -53,13 +53,14 @@ void Slider::setValue(float newValue) {
 	value = clamp(newValue, minVal, maxVal);
 }
 bool Slider::isClickWithin(int x, int y){
-	
+	// EXPLANATION NEEDED
 	int sliderX = ((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal)))) - SLIDER_CIRCLE_RADIUS;
 	int sliderY = ((float)yPos + (SLIDER_HEIGHT / 2.0)) - SLIDER_CIRCLE_RADIUS;
 	return x > sliderX && x < (sliderX + SLIDER_CIRCLE_RADIUS * 2.0) && y > sliderY && y < (sliderY + SLIDER_CIRCLE_RADIUS * 2.0);
 }
 
 void Slider::updateValFromMouseMotion(float absX, float deltaX){
+	// EXPLANATION NEEDED
 	if (absX < xPos + SLIDER_WIDTH + SLIDER_CIRCLE_RADIUS + SLIDER_BOUNDS_GRACE && absX > xPos - SLIDER_CIRCLE_RADIUS - SLIDER_BOUNDS_GRACE){
 		this->setValue(this->getValue() +  (deltaX / SLIDER_WIDTH) * (maxVal - minVal));
 	}
@@ -68,21 +69,24 @@ void Slider::updateValFromMouseMotion(float absX, float deltaX){
 // they are a wide rectangle with a red circle drawn to indicate value
 // don't place it too close to the right edge, it doesnt do any edge detection
 void Slider::drawSlider(vector<unsigned int>* pixels,bool drawAsPressed){
+	// Draw a rectangle for the slider bar
 	for (int row = yPos; row < yPos + SLIDER_HEIGHT; row++){
 		for (int col = xPos; col < xPos + SLIDER_WIDTH; col++){
 			setPixel(pixels, col, row, 0xFFFFFFFF);
 		}
 	}
+	// Draw the slider handle
 	circle(
 		pixels,
 		Vec2((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal))), (float)yPos + (SLIDER_HEIGHT / 2.0)),
 		SLIDER_CIRCLE_RADIUS,
-		drawAsPressed ? 0xDD0000FF : 0xFF0000FF
+		drawAsPressed ? 0xDD0000FF : 0xFF0000FF // If the slider is being held down
 	);
 }
 
 void setPixel(vector<unsigned int>* pixels, int pixelX, int pixelY, unsigned int color) {
 	if (pixelY > 0 && pixelY < SCREEN_HEIGHT && pixelX > 0 && pixelX < SCREEN_WIDTH) {
+		// The framebuffer is one-dimensional because SDL likes it that way.
 		pixels->at(SCREEN_WIDTH * pixelY + pixelX) = color;
 	}
 }
@@ -102,9 +106,13 @@ void setSquare(vector<unsigned int>* pixels, const Vec2& location, float size, u
 }
 
 void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsigned int color) {
+	// For each row that is within the radius,
 	for (int row = center.x() - radius; row <= center.x() + radius; row++) {
+		// For each column that is within the radius,
 		for (int col = center.y() - radius; col <= center.y() + radius; col++) {
+			// Calculate the distance function
 			float dist = sqrt(pow(row - center.x(), 2) + pow(col - center.y(), 2));
+			// Draw if the distance is within the radius
 			if (dist <= radius) {
 				setPixel(pixels, row, col, color);
 				// Border color and size
@@ -125,8 +133,8 @@ void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 	}
 }
 
-// returns width of drawn character
-//  5 factors wide by 7 factor tall
+// This might need its own file lowkirk
+// 5 factors wide by 7 factor tall
 void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, char c){
 	// TODO
 	switch (c){
@@ -171,7 +179,7 @@ void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 			setRect(pixels, {location.x() + scale, location.y() + 6.0 * scale}, { scale * 3.0, scale}, color);
 			// lower hookey bit at left
 			setSquare(pixels, {location.x(), location.y() + 5.0 * scale}, scale, color);
-			
+
 		break;
 		case '4':
 			// the diagonal bit
@@ -197,7 +205,7 @@ void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 			setRect(pixels, {location.x() + scale, location.y() + 6.0 *scale}, {3.0 * scale, scale}, color);
 			// the hookey bit at the back
 			setSquare(pixels, {location.x(), location.y() + 5.0 * scale}, scale, color);
-			
+
 		break;
 		case '6':
 			// top small flat bit
@@ -275,4 +283,3 @@ void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 		break;
 	}
 }
-

@@ -48,9 +48,12 @@ class SandGrid {
 		void updateGridPlacements();
 };
 
+// Detect if a particle would collide with the edges of the window
 bool detectScreenBoundsCollision(const Vec2& startPos, const Vec2& velocity, const double& radius, const double& dt);
 
+// Reflect the particle after detecting a collision with the edges of the window
 void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, const double& dt);
+// Stop the particle when the particle is slow enough to be considered "stopping", after a screen edge collision
 void screenBoundStop(Vec2* startPos, Vec2* velocity, const double& radius);
 
 // stuff needed

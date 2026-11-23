@@ -69,9 +69,11 @@ void windowClose();
 bool loop(SDL_Event* e, SDL_Time dt) {
 	// Handle events
 	while (SDL_PollEvent(e)) {
+		// Runs when the person closes the window
 		if (e->type == SDL_EVENT_QUIT) {
 			return false;
 		}
+		// Detect mouse button-down when the cursor is inside of a slider circle
 		if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
 			for (int i = 0; i < NUM_SLIDERS; i++){
 				if (sliders[i].isClickWithin(e->motion.x, e->motion.y)){
@@ -79,9 +81,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 				}
 			}
 		}
+		// Detect mouse button-up to stop sliding
 		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP){
 			selectedSlider = ProgramSlider::NONE;
 		}
+		// Detect mouse motion for updating the sliders
 		if (e->type == SDL_EVENT_MOUSE_MOTION){
 			if (selectedSlider != NONE){
 				sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
@@ -95,6 +99,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	pixelData = vector<unsigned int>(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 
 	// Calculate particles
+	// Run updateVelocity to create a new velocity from acceleration,
+	// then run updatePosition to calculate the collisions and update the positions
 	for (vector<vector<SandGrain>>& row : grid.the)
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col) {
@@ -103,6 +109,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			}
 
 	// Render pixels (update to density map later)
+	// This just involves updating the grid placements for the particles,
+	// then rendering a circle for each particle
 	for (vector<vector<SandGrain>>& row : grid.the)
 		for (vector<SandGrain>& col : row)
 			for (SandGrain& grain : col) {
@@ -111,6 +119,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 			}
 
+	// Draws each slider, its state, and its text value
 	for (int i = 0; i < NUM_SLIDERS; i++){
 			sliders[i].drawSlider(&pixelData, i == selectedSlider);
 		drawText(&pixelData, {(double)(sliders[i].x() + SLIDER_WIDTH + 15),(double)sliders[i].y() - 2}, 1.0, 0xFFFFFFFF, to_string(sliders[i].getValue()));
@@ -124,16 +133,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
 	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
+	// Render the permanent trails
 	// SDL_UpdateTexture(pixelTexture, NULL, permanentTrail.data(), SCREEN_WIDTH * 4);
 	// SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
-
-	// General idea of process:
-	// 1. Calculate collisions and accelerate particles as needed
-	//        Could be multithreaded
-	// 2. Update the positions of particles
-	//        Could be multithreaded, also update the cell each particle is in
-	// 3. Render particles
-	//        Probably using SDL_RenderPoint and calculating the circle to render
 
 	// Continue
 	return true;
@@ -186,6 +188,7 @@ int main() {
 		SDL_RenderPresent(renderer);
 	}
 
+	// Close the window and terminate the program
 	windowClose();
 	return 0;
 }
@@ -208,6 +211,7 @@ bool windowInit() {
 		return false;
 	}
 
+	// Create a pixel texture sized at the screen size for easy pixel updating
 	pixelTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;

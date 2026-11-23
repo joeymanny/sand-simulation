@@ -3,14 +3,17 @@
  * Defines special-purpose math functions and classes
  */
 
+// Convert nanoseconds dt to seconds dt
 #define dtToSec(dt) ((double)dt / 1000000000)
 
 // Class that defines a two-dimensional vector with x- and y-components, like a position on a 2-dimensional plane
 class Vec2 {
 	private:
+		// TODO: Test if automatically claculating direction, magnitude, and unit is better than only calculating if needed
 		double xPos, yPos, dir, mag, unitX, unitY;
 	public:
 		// Constructs a Vec2 from a given magnitude and direction
+		// QUESTION: Is this needed?
 		static Vec2 fromMagnitudeDirection(const double& magnitude, const double& direciton);
 
 		// Regular constructor
