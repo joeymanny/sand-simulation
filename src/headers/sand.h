@@ -11,7 +11,7 @@
 
 // Defines a single grain of sand
 class SandGrain {
-	private:
+	protected:
 		// Particle properties
 		Vec2 position, velocity, acceleration;
 		double frictionMult = 0.6;
@@ -36,4 +36,6 @@ class SandGrain {
 		const Vec2& getPosition() const;
 		// Get velocity
 		const Vec2& getVelocity() const;
+
+		friend void collideParticles(SandGrain* a, SandGrain* b);
 };

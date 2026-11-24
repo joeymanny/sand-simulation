@@ -135,6 +135,12 @@ void screenBoundStop(Vec2* startPos, Vec2* velocity, const double& radius) {
 
 // stuff needed
 
+void collideParticles(SandGrain* a, SandGrain* b) {
+	// TODO: CODE THIS
+	// Andrew: The code can go into this function. Whatever you do, make sure the positions of a and b change to where their
+	//     collision are detected, and their velocity is what the new trajectory will be after the collision.
+	// I can do the algorithms of how this function is used
+}
 // 1. Find time at which the particles interact (between 0 and 1 tick)
 //      1a. Relative Velocity = (ending - starting pos 1) - (ending - starting pos 2)
 //      1b. Relative Pos = starting pos 1 - starting pos 2

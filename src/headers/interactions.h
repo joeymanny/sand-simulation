@@ -56,5 +56,8 @@ void screenBoundReflect(Vec2* startPos, Vec2* velocity, const double& radius, co
 // Stop the particle when the particle is slow enough to be considered "stopping", after a screen edge collision
 void screenBoundStop(Vec2* startPos, Vec2* velocity, const double& radius);
 
+// Collide two particles, updating the positin to the collision stop position, and the velocity to the new trajectory after collision
+void collideParticles(SandGrain* a, SandGrain* b);
+
 // stuff needed
 // One thing to have is a function to convert particle positions to screen coordinates based on window size and zoom
