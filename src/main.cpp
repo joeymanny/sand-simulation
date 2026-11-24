@@ -84,11 +84,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP)
 			selectedSlider = ProgramSlider::NONE;
 		// Detect mouse motion for updating the sliders
-		if (e->type == SDL_EVENT_MOUSE_MOTION) {
-			if (selectedSlider != NONE) {
-				sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
-				// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
-			}
+		if (e->type == SDL_EVENT_MOUSE_MOTION && selectedSlider != NONE) {
+			sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
+			// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
 		}
 		// TODO: reset button to reset simulation while keeping slider values the same
 	}
