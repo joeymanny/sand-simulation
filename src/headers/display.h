@@ -8,26 +8,10 @@
 
 #include "math.h"
 
-constexpr int SLIDER_WIDTH = 100; // width of slider bar
-constexpr int SLIDER_HEIGHT = 4; // height of slider bar
-constexpr int SLIDER_CIRCLE_RADIUS = 8; // radius of slider circle
-// amount to expand slide width of slider by (helps reduce issue
-// of slider getting very close to max but not quite)
-constexpr int SLIDER_BOUNDS_GRACE = 1;
-
-// this const must be updated by hand.
-// it must EXCLUDE the NONE variant.
-// READ COMMENT PLS
-constexpr int NUM_SLIDERS = 2;
-enum ProgramSlider{
-	FRICTION,
-	PLATFORM,
-	// README before adding variants!
-	// add new variants above NONE
-	// and do not include the NONE variant
-	// in the NUM_SLIDERS count
-	NONE,
-};
+inline constexpr int SLIDER_WIDTH = 100;
+inline constexpr int SLIDER_HEIGHT = 4;
+inline constexpr int SLIDER_CIRCLE_RADIUS = 8;
+inline constexpr int SLIDER_BOUNDS_GRACE = 1;
 
 class Slider {
 	private:

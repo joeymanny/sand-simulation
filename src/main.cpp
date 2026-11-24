@@ -38,6 +38,20 @@ vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 // vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+// this const must be updated by hand.
+// it must EXCLUDE the NONE variant.
+// READ COMMENT PLS
+constexpr int NUM_SLIDERS = 2;
+enum ProgramSlider{
+	FRICTION,
+	PLATFORM,
+	// README before adding variants!
+	// add new variants above NONE
+	// and do not include the NONE variant
+	// in the NUM_SLIDERS count
+	NONE,
+};
+
 // variables for holding user's desired communicated by sliders
 // number of sliders is in NUM_SLIDERS constant
 // this is an array of sliders

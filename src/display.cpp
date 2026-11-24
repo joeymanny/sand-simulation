@@ -14,7 +14,6 @@
 #include <string>
 using namespace std;
 
-
 Slider::Slider(int inXPos, int inYPos, float inMin, float inMax, float inValue) {
 	xPos = inXPos;
 	yPos = inYPos;
