@@ -27,7 +27,7 @@ constexpr int FPS_LIMIT = 60;
 constexpr long NS_PER_FRAME = 1000000000 / FPS_LIMIT;
 
 // For sliders: Bounds of...
-// FRICTION_MULT -> [.2,.8]					  	   NOT FINAL VALUES
+// FRICTION_MULT -> [.2,.8]                        NOT FINAL VALUES
 // GRAVITY_ACCEL -> [1 * GRAVITY, 2 * GRAVITY]     NOT FINAL VALUES
 
 // Constants for the entire window
