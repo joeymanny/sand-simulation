@@ -52,4 +52,8 @@ void SandGrain::instantAccelerate(const Vec2& newVelocity) {
 	velocity = newVelocity;
 }
 
+const Vec2& SandGrain::getVelocity() const {
+	return velocity;
+}
+
 // add other stuff

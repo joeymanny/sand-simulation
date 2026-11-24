@@ -34,4 +34,6 @@ class SandGrain {
 
 		// Get position
 		const Vec2& getPosition() const;
+		// Get velocity
+		const Vec2& getVelocity() const;
 };

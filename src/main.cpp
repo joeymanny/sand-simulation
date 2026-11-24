@@ -120,6 +120,14 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		}
 	}
 
+	// For the new collisions:
+	//     Move updating position to after this for loop i will describe:
+	//     For each particle in a given grid, check collisions between each other particle by:
+	//         collide 2 particles, and they will have a new position (collision stop) and new velocity (new trajectory)
+	//         for each iteration, add a 3rd particle to the system, ONLY check the collision between this and the 2 previously finished
+	//             collided particles
+	//     THEN finally update the positions after we have the new trajectories
+
 	// Render pixels (update to density map later)
 	// This just involves updating the grid placements for the particles,
 	// then rendering a circle for each particle
