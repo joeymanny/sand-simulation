@@ -52,6 +52,8 @@ void Slider::setValue(float newValue) {
 	value = clamp(newValue, minVal, maxVal);
 }
 bool Slider::isClickWithin(int x, int y) {
+	// returns true if the click was within this bounding box.
+	// the bounding box is a square around the slider's circle
 	int sliderBoundingBoxMinX = ((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal)))) - SLIDER_CIRCLE_RADIUS;
 	int sliderBoundingBoxMaxX = (sliderBoundingBoxMinX + SLIDER_CIRCLE_RADIUS * 2.0);
 	int sliderBoundingBoxMinY = ((float)yPos + (SLIDER_HEIGHT / 2.0)) - SLIDER_CIRCLE_RADIUS;
@@ -60,8 +62,9 @@ bool Slider::isClickWithin(int x, int y) {
 }
 
 void Slider::updateValFromMouseMotion(float absX, float deltaX) {
-	// EXPLANATION NEEDED
 	// we only update the value if the mouse is within the bounds of the slider
+	// this bounding box is wider than the slider body by circle radius + bounds grace
+	// this means the mouse will stop affecting the slider if it is to far to the right or left
 	int sliderBoundingBoxMaxX = xPos + SLIDER_WIDTH + SLIDER_CIRCLE_RADIUS + SLIDER_BOUNDS_GRACE;
 	int sliderBoundingBoxMinX = xPos - SLIDER_CIRCLE_RADIUS - SLIDER_BOUNDS_GRACE;
 	if (absX < sliderBoundingBoxMaxX  && absX > sliderBoundingBoxMinX)
