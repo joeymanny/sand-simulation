@@ -140,6 +140,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			}
 		}
 	}
+	// enable this to draw as a density map
+	// this totally overwrites pixelData
+	// drawDensityMap(&pixelData, grid);
 
 	// Draws each slider, its state, and its text value
 	for (int i = 0; i < NUM_SLIDERS; i++) {

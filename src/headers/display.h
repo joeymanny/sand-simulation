@@ -7,12 +7,17 @@
 #include <string>
 
 #include "math.h"
+#include "interactions.h"
 
 inline constexpr int SLIDER_WIDTH = 100;
 inline constexpr int SLIDER_HEIGHT = 4;
 inline constexpr int SLIDER_CIRCLE_RADIUS = 8;
 inline constexpr int SLIDER_BOUNDS_GRACE = 1;
-
+// the last 8 bits are overwritten by FF in the code so they don't matter
+inline constexpr unsigned int SAND_COLOR_R = 0xFF; // 0xE2;
+inline constexpr unsigned int SAND_COLOR_G = 0xDF; // 0xCA;
+inline constexpr unsigned int SAND_COLOR_B = 0x81; // 0x76;
+inline constexpr double SHARPNESS = 2.0;
 class Slider {
 	private:
 		int xPos;
@@ -76,3 +81,11 @@ void drawText(std::vector<unsigned int>* pixels, const Vec2& location, float sca
 // of the drawn character. a scale of 1.0 means each "pixel" of the character is one screen pixel in size.
 // drawn character will be 5 "scale"s wide by 7 "scale"s tall
 void drawChar(std::vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, char c);
+
+// draws a density map of the given sand grid to the given pixels. fully overwrites
+// the inputted pixels.
+void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid);
+
+// returns a "percent brightness" for a given number of sand grids in one pixel
+// (char is acting as an unsigned 8-bit int)
+double sandBrightness(char count);

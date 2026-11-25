@@ -134,6 +134,52 @@ void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 	}
 }
 
+void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid){
+	using std::vector;
+	// we make a 2d vector of the same shape and size as the screen
+	// char is acting as a 8-bit unsigned int here
+	// (just kinda hoping we don't have more than 255 in one pixel)
+	vector<vector<char>> countGrid = vector(SCREEN_WIDTH, vector(SCREEN_HEIGHT, (char)0));
+	for (int i = 0; i < sandGrid.the.size(); i++){
+		for (int j = 0; j < sandGrid.the[i].size(); j++){
+			for (const SandGrain& grain : sandGrid.the[i][j]){
+				Vec2 position = grain.getPosition();
+				countGrid[(int)floor(position.x()) - 1][(int)floor(position.y()) - 1] += 1;
+			}
+		}
+	}
+	for (int i = 0; i < SCREEN_WIDTH; i++){
+		for (int j = 0; j < SCREEN_HEIGHT; j++){
+			// multiply, then cast, then shift left and right by 2, then add 0xFF
+			double fac = sandBrightness(countGrid[i][j]);
+			
+			// unsigned int color = (((unsigned int)((unsigned int)((SAND_COLOR >> 8))*fac)) << 8) + 0xFF;
+			int red = SAND_COLOR_R * fac;
+			int green = SAND_COLOR_G * fac;
+			int blue = SAND_COLOR_B * fac;
+			unsigned int color = red;
+			color = color << 8;
+			color = color + green;
+			color = color << 8;
+			color = color + blue;
+			color = color << 8;
+			color = color + 0xFF;
+			if (color != 0xFF){SDL_Log("%08X", color); SDL_Log("%lf", fac);}
+			setPixel(
+				pixels,
+				i,
+				j,
+				color
+			);
+		}
+	}
+}
+
+double sandBrightness(char count){
+	return (-1.0 / (SHARPNESS * (float)count + 1.0)) + 1.0; // put into desmos to visualize
+
+}
+
 // This might need its own file lowkirk
 // 5 factors wide by 7 factor tall
 void drawChar(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, char c) {
