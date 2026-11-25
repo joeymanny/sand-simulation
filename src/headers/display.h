@@ -13,11 +13,16 @@ inline constexpr int SLIDER_WIDTH = 100;
 inline constexpr int SLIDER_HEIGHT = 4;
 inline constexpr int SLIDER_CIRCLE_RADIUS = 8;
 inline constexpr int SLIDER_BOUNDS_GRACE = 1;
-// the last 8 bits are overwritten by FF in the code so they don't matter
+// color of the sand - red chennel
 inline constexpr unsigned int SAND_COLOR_R = 0xFF; // 0xE2;
+// color of the sand - green chennel
 inline constexpr unsigned int SAND_COLOR_G = 0xDF; // 0xCA;
+// color of the sand - blue chennel
 inline constexpr unsigned int SAND_COLOR_B = 0x81; // 0x76;
-inline constexpr double SHARPNESS = 2.0;
+// how sharply the brightness of a pixel increases with the number
+// of sand particle. at a low value one grain will appear dim, at a high
+// value one grain will appear bright
+inline constexpr double COLOR_RAMP_SHARPNESS = 2.0;
 class Slider {
 	private:
 		int xPos;
@@ -86,6 +91,6 @@ void drawChar(std::vector<unsigned int>* pixels, const Vec2& location, float sca
 // the inputted pixels.
 void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid);
 
-// returns a "percent brightness" for a given number of sand grids in one pixel
-// (char is acting as an unsigned 8-bit int)
-double sandBrightness(char count);
+// returns a brightness factor within [0,1) for a given number of sand
+// grains in one pixel (char is acting as an unsigned 8-bit int)
+double pixelBrightness(char count);

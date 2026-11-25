@@ -55,9 +55,12 @@ bool Slider::isClickWithin(int x, int y) {
 	// returns true if the click was within this bounding box.
 	// the bounding box is a square around the slider's circle
 	int sliderBoundingBoxMinX = ((float)xPos + ((float)SLIDER_WIDTH * ((value - minVal) / (maxVal - minVal)))) - SLIDER_CIRCLE_RADIUS;
+	// reuse a little math by just shifting 1 circle diameter to the right
 	int sliderBoundingBoxMaxX = (sliderBoundingBoxMinX + SLIDER_CIRCLE_RADIUS * 2.0);
 	int sliderBoundingBoxMinY = ((float)yPos + (SLIDER_HEIGHT / 2.0)) - SLIDER_CIRCLE_RADIUS;
+	// same math reuse as before, just down this time
 	int sliderBoundingBoxMaxY = (sliderBoundingBoxMinY + SLIDER_CIRCLE_RADIUS * 2.0);
+	// return whether the given position is within that square
 	return x > sliderBoundingBoxMinX && x < sliderBoundingBoxMaxX && y > sliderBoundingBoxMinY && y < sliderBoundingBoxMaxY;
 }
 
@@ -124,6 +127,58 @@ void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsign
 	}
 }
 
+void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid){
+	using std::vector;
+	// we make a 2d vector of the same shape and size as the screen
+	// char is acting as a 8-bit unsigned int here
+	// (just kinda hoping we don't have more than 255 in one pixel)
+	vector<vector<char>> countGrid = vector(SCREEN_WIDTH, vector(SCREEN_HEIGHT, (char)0));
+
+	// iterate over every grain...
+	for (int i = 0; i < sandGrid.the.size(); i++){
+		for (int j = 0; j < sandGrid.the[i].size(); j++){
+			for (const SandGrain& grain : sandGrid.the[i][j]){
+				// get its position
+				Vec2 position = grain.getPosition();
+				// and add it to the count, indexing based on its position
+				countGrid[(int)floor(position.x()) - 1][(int)floor(position.y()) - 1] += 1;
+			}
+		}
+	}
+	// next we update the color of every pixel based on the number of grains
+	for (int i = 0; i < SCREEN_WIDTH; i++){
+		for (int j = 0; j < SCREEN_HEIGHT; j++){
+			// multiply, then cast, then shift left and right by 2, then add 0xFF
+			double fac = pixelBrightness(countGrid[i][j]);
+			
+			// we have to apply the factor to each channel individually
+			int red = SAND_COLOR_R * fac;
+			int green = SAND_COLOR_G * fac;
+			int blue = SAND_COLOR_B * fac;
+			// apply, shift, apply, shift...
+			unsigned int color = 0;
+			color += red;
+			color <<= 8;
+			color += green;
+			color <<= 8;
+			color += blue;
+			color <<= 8;
+			// always draw fully opaque
+			color = color + 0xFF;
+			setPixel(pixels, i, j, color);
+		}
+	}
+}
+
+double pixelBrightness(char count){
+	// put into desmos to visualize
+	// should never divide by zero since char cannot be negative
+	// will divide by zero if (float)count == -1.0
+	return (-1.0 / (COLOR_RAMP_SHARPNESS * (float)count + 1.0)) + 1.0; 
+}
+
+
+
 void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, unsigned int color, const string& text) {
 	float drawCursorX = location.x();
 	float drawCursorY = location.y();
@@ -132,52 +187,6 @@ void drawText(vector<unsigned int>* pixels, const Vec2& location, float scale, u
 		// one extra for padding
 		drawCursorX += 6.0 * scale;
 	}
-}
-
-void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid){
-	using std::vector;
-	// we make a 2d vector of the same shape and size as the screen
-	// char is acting as a 8-bit unsigned int here
-	// (just kinda hoping we don't have more than 255 in one pixel)
-	vector<vector<char>> countGrid = vector(SCREEN_WIDTH, vector(SCREEN_HEIGHT, (char)0));
-	for (int i = 0; i < sandGrid.the.size(); i++){
-		for (int j = 0; j < sandGrid.the[i].size(); j++){
-			for (const SandGrain& grain : sandGrid.the[i][j]){
-				Vec2 position = grain.getPosition();
-				countGrid[(int)floor(position.x()) - 1][(int)floor(position.y()) - 1] += 1;
-			}
-		}
-	}
-	for (int i = 0; i < SCREEN_WIDTH; i++){
-		for (int j = 0; j < SCREEN_HEIGHT; j++){
-			// multiply, then cast, then shift left and right by 2, then add 0xFF
-			double fac = sandBrightness(countGrid[i][j]);
-			
-			// unsigned int color = (((unsigned int)((unsigned int)((SAND_COLOR >> 8))*fac)) << 8) + 0xFF;
-			int red = SAND_COLOR_R * fac;
-			int green = SAND_COLOR_G * fac;
-			int blue = SAND_COLOR_B * fac;
-			unsigned int color = red;
-			color = color << 8;
-			color = color + green;
-			color = color << 8;
-			color = color + blue;
-			color = color << 8;
-			color = color + 0xFF;
-			if (color != 0xFF){SDL_Log("%08X", color); SDL_Log("%lf", fac);}
-			setPixel(
-				pixels,
-				i,
-				j,
-				color
-			);
-		}
-	}
-}
-
-double sandBrightness(char count){
-	return (-1.0 / (SHARPNESS * (float)count + 1.0)) + 1.0; // put into desmos to visualize
-
 }
 
 // This might need its own file lowkirk
