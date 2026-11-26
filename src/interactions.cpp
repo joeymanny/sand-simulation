@@ -62,7 +62,7 @@ int SandGrid::getSandCount() const {
 }
 
 // stuff needed
-void checkParticleCollision(SandGrain* a, SandGrain* b){
+void collideParticles(SandGrain* a, SandGrain* b){
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
@@ -91,6 +91,15 @@ void checkParticleCollision(SandGrain* a, SandGrain* b){
 
     Vec2 NewPartialVel1 = NewGeneralVel1.scale(1-t);
     Vec2 NewPartialVel2 = NewGeneralVel2.scale(1-t);
+
+    a->partialVelocity = NewPartialVel1;
+    b->partialVelocity = NewPartialVel2;
+
+    a->velocity = NewGeneralVel1;
+    b->velocity = NewGeneralVel2;
+
+    a->position = o1;
+    b->position = o2;
 }
 
 
