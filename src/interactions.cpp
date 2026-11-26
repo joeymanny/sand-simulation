@@ -135,6 +135,9 @@ bool collideParticles(SandGrain* a, SandGrain* b){
     a->position = o1;
     b->position = o2;
 
+    a->stationary = false;
+    b->stationary = false;
+
     return true;
 }
 

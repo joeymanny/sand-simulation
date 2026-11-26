@@ -6,6 +6,10 @@
 // Convert nanoseconds dt to seconds dt
 #define dtToSec(dt) ((double)dt / 1000000000)
 
+// pi
+#define PI 3.141592653589793
+inline constexpr double HALF_PI = PI/2;
+
 // Class that defines a two-dimensional vector with x- and y-components, like a position on a 2-dimensional plane
 class Vec2 {
 	private:

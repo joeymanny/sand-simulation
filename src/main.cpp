@@ -177,10 +177,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 						}
 					}
 
-					// Add the current particle to the matrix of particles that have already been collision-calculated
-					SandGrain* tempPtr = &grain; // This points to the sandgrain
-					ptrGrid.addParticle(&tempPtr); // Pointer to the pointer, yet it pushes the SandGrain* to the matrix. It will work
-
 					// TESTING/DEMO CODE: The proper way partial velocity is handled
 					Vec2 beforeVelocity = grain.getVelocity(); // TESTING CODE
 					Vec2 beforePVelocity = grain.getPartialVelocity(); // TESTING CODE
@@ -201,6 +197,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
 						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
 					}
+
+					// Add the current particle to the matrix of particles that have already been collision-calculated
+					SandGrain* tempPtr = &grain; // This points to the sandgrain
+					ptrGrid.addParticle(&tempPtr); // Pointer to the pointer, yet it pushes the SandGrain* to the matrix. It will work
+
 				}
 			}
 		}
@@ -293,6 +294,7 @@ int main() {
 	// Initialize particles
 	SandGrain testParticle0({200, 100});
 	testParticle0.instantAccelerate({300, 0});
+	// testParticle0.instantAccelerate({3000000, 100000}); // Uncomment this to test more complex collisions
 	grid.addParticle(&testParticle0);
 	SandGrain testParticle1({400, 100});
 	testParticle1.instantAccelerate({-300, 0});

@@ -3,6 +3,7 @@
  */
 
 #include <SDL3/SDL_log.h>
+#include <cmath>
 #include <ctime>
 
 #include "headers/sand.h"
@@ -132,6 +133,12 @@ void SandGrain::screenBoundStop() {
 }
 
 bool SandGrain::isSlowEnough() const {
-	// TODO: incorporate angle into this, so that we don't get sudden stops (more angled downward, higher threshold)
-	return velocity.magnitude() < VELOCITY_STOP_THRESHOLD;
+	// Less steep downward angle = lower velocity stop threshold
+	double angle = velocity.direction();
+	if (angle < 0)
+		angle = -angle;
+	if (angle >= PI)
+		angle -= PI;
+	double modifier = pow((HALF_PI - fabs(angle - HALF_PI)) / HALF_PI, 5);
+	return velocity.magnitude() < VELOCITY_STOP_THRESHOLD * modifier;
 }

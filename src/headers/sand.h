@@ -9,7 +9,7 @@
 #include "math.h"
 
 // Sweet spot velocity stop threshold: no sudden cuts, no unnecessary velocity updates. DO NOT CHANGE
-#define VELOCITY_STOP_THRESHOLD 36
+#define VELOCITY_STOP_THRESHOLD 38
 // Default gravity that makes things look realistic
 #define DEFAULT_GRAVITY 4096
 // Default friction arbitrarily chosen
