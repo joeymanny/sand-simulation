@@ -23,8 +23,9 @@
 #include "headers/common.h"
 
 // Global constants
-constexpr int FPS_LIMIT = 60;
-constexpr long NS_PER_FRAME = 1000000000 / FPS_LIMIT;
+constexpr int FPS_LIMIT = 61;
+constexpr int NS_PER_SEC = 1000000000;
+constexpr long NS_PER_FRAME = NS_PER_SEC / FPS_LIMIT;
 
 // For sliders: Bounds of...
 // FRICTION_MULT -> [.2,.8]                        NOT FINAL VALUES
@@ -81,6 +82,11 @@ void windowClose();
 //     the window. SDL_RenderPresent happens at the END of every frame for consistency, rather than
 //     somewhere in the middle
 bool loop(SDL_Event* e, SDL_Time dt) {
+	// Keep track of time (modulated) for framerate rendering purposes
+	static unsigned int nanoseconds = 0;
+	static bool fpsTextUpdated = false;
+	static int fps = 0;
+
 	// Handle events
 	while (SDL_PollEvent(e)) {
 		// Runs when the person closes the window
@@ -180,6 +186,20 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// setSquare(&pixelData, {200,200}, 20.0, 0xFFFFFFFF);
 	// TEST
 
+	// Update framerate presentation, but only every half-second
+	if (!fpsTextUpdated) {
+		fps = NS_PER_SEC / (dt + 1); // +1 for no floating point errors
+		fpsTextUpdated = true;
+	}
+	drawText(&pixelData, {600, 20}, 2.0, 0x00FF00FF, to_string(fps));
+
+	// Update the counter keeping track of if the framerate should update every half-second
+	unsigned int prevNS = nanoseconds;
+	nanoseconds += dt;
+	nanoseconds %= NS_PER_SEC / 2;
+	if (nanoseconds < prevNS)
+		fpsTextUpdated = false;
+
 	// Render the window
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
 	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
@@ -205,7 +225,7 @@ int main() {
 
 	// Initialize time
 	SDL_Time now;
-	SDL_Time dt = 0;
+	SDL_Time dt = NS_PER_FRAME;
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
