@@ -51,6 +51,9 @@ void SandGrain::instantAccelerate(const Vec2& newVelocity) {
 const Vec2& SandGrain::getVelocity() const {
 	return velocity;
 }
+const Vec2& SandGrain::getPartialVelocity() const {
+	return partialVelocity;
+}
 
 bool SandGrain::detectScreenBoundsCollision(const double& dt) const {
 	// Assume the particle will update its position to p.

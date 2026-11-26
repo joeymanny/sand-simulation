@@ -14,6 +14,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_time.h>
 #include <SDL3/SDL_video.h>
+#include <cmath>
 #include <vector>
 
 // Our header files
@@ -23,7 +24,7 @@
 #include "headers/common.h"
 
 // Global constants
-constexpr int FPS_LIMIT = 61;
+constexpr int FPS_LIMIT = 60;
 constexpr int NS_PER_SEC = 1000000000;
 constexpr long NS_PER_FRAME = NS_PER_SEC / FPS_LIMIT;
 
@@ -36,7 +37,7 @@ SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 SDL_Texture* pixelTexture = nullptr;
 vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
-// vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
+vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // this const must be updated by hand.
@@ -86,6 +87,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	static unsigned int nanoseconds = 0;
 	static bool fpsTextUpdated = false;
 	static int fps = 0;
+
+	// TESTING CODE: number of permanent circles to draw
+	static char a = 0;
 
 	// Handle events
 	while (SDL_PollEvent(e)) {
@@ -148,10 +152,21 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 								for (SandGrain* otherGrain : ptrCol) {
 									// If the two grains of sand are not the same grain of sand, check collision
 									if (grain.id() != otherGrain->id()) {
-										SDL_Log("Checking particles %ld with %ld", grain.id(), otherGrain->id());
+										Vec2 beforeVelocity = grain.getVelocity(); // TESTING CODE
+										Vec2 beforePVelocity = grain.getPartialVelocity(); // TESTING CODE
 										collided = collideParticles(&grain, otherGrain); // This will also update their properties
 										if (collided) {
-											SDL_Log("Collision!");
+											SDL_Log("Particle Collision!");
+
+											// TESTING CODE: Print velocity before and after, then visualize the collision stop
+											Vec2 afterVelocity = grain.getVelocity();
+											Vec2 afterPVelocity = grain.getPartialVelocity();
+											SDL_Log("\x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
+											SDL_Log("\x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
+											circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
+											circle(&permanentTrail, otherGrain->getPosition(), 5, 0xFF0000FF);
+											a += 4;
+
 											break; // Stop the entire damn loop when a single collision happens
 										}
 									}
@@ -166,6 +181,10 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 					SandGrain* tempPtr = &grain; // This points to the sandgrain
 					ptrGrid.addParticle(&tempPtr); // Pointer to the pointer, yet it pushes the SandGrain* to the matrix. It will work
 
+					// TESTING/DEMO CODE: The proper way partial velocity is handled
+					Vec2 beforeVelocity = grain.getVelocity(); // TESTING CODE
+					Vec2 beforePVelocity = grain.getPartialVelocity(); // TESTING CODE
+
 					// Detect screen collisions
 					if (grain.detectScreenBoundsCollision(dt)) {
 						// If the particle is effectively immobile, structurallly stop it
@@ -175,6 +194,12 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 							// Reflect the particle if it is going fast enough
 							grain.screenBoundReflect(dt);
 						collided = true;
+
+						// TESTING/DEMO CODE: partial velocity
+						Vec2 afterVelocity = grain.getVelocity();
+						Vec2 afterPVelocity = grain.getPartialVelocity();
+						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
+						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
 					}
 				}
 			}
@@ -197,10 +222,16 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 		for (vector<SandGrain>& col : row) {
 			for (SandGrain& grain : col) {
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
-				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
+				if (a > 0) { // TESTING CODE: Visualize the particle position history for the frame of the collision stop and the frame after the collision stop
+					circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
+					a--;
+				}
+				// TESTING CODE: Label each particle with it's ID for easy tracking
+				drawText(&pixelData, grain.getPosition().add({-4, -6}), 2.0, 0x000000FF, to_string(grain.id()));
 			}
 		}
 	}
+
 	// enable this to draw as a density map
 	// this totally overwrites pixelData
 	// drawDensityMap(&pixelData, grid);
@@ -218,7 +249,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 
 	// Update framerate presentation, but only every half-second
 	if (!fpsTextUpdated) {
-		fps = NS_PER_SEC / (dt + 1); // +1 for no floating point errors
+		double fpsFloat = (double)NS_PER_SEC / (dt + 1); // +1 for no floating point errors
+		fps = ceil(fpsFloat);
 		fpsTextUpdated = true;
 	}
 	drawText(&pixelData, {600, 20}, 2.0, 0x00FF00FF, to_string(fps));
@@ -234,8 +266,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	SDL_UpdateTexture(pixelTexture, NULL, pixelData.data(), SCREEN_WIDTH * 4);
 	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
 	// Render the permanent trails
-	// SDL_UpdateTexture(pixelTexture, NULL, permanentTrail.data(), SCREEN_WIDTH * 4);
-	// SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
+	SDL_UpdateTexture(pixelTexture, NULL, permanentTrail.data(), SCREEN_WIDTH * 4);
+	SDL_RenderTexture(renderer, pixelTexture, NULL, NULL);
 
 	// Continue
 	return true;
@@ -259,12 +291,18 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	SandGrain testParticle1({200, 100});
-	testParticle1.instantAccelerate({300, 0});
+	SandGrain testParticle0({200, 100});
+	testParticle0.instantAccelerate({300, 0});
+	grid.addParticle(&testParticle0);
+	SandGrain testParticle1({400, 100});
+	testParticle1.instantAccelerate({-300, 0});
 	grid.addParticle(&testParticle1);
-	SandGrain testParticle2({400, 100});
-	testParticle2.instantAccelerate({-300, 0});
-	grid.addParticle(&testParticle2);
+
+	// TESTING CODE: Show where the particle started
+	circle(&permanentTrail, testParticle0.getPosition(), 5, 0xFF0000FF);
+	drawText(&permanentTrail, testParticle0.getPosition().add({5, 5}), 2.0, 0xFF0000FF, "0");
+	circle(&permanentTrail, testParticle1.getPosition(), 5, 0xFF0000FF);
+	drawText(&permanentTrail, testParticle1.getPosition().add({5, 5}), 2.0, 0xFF0000FF, "1");
 
 	// Main loop
 	while (loop(&e, dt)) {
@@ -306,10 +344,10 @@ bool windowInit() {
 		return false;
 	}
 	// Initialize VSync
-	if (!SDL_SetRenderVSync(renderer, 1)) {
-		SDL_Log("VSync Init error: %s", SDL_GetError());
-		return false;
-	}
+	// if (!SDL_SetRenderVSync(renderer, 1)) {
+	// 	SDL_Log("VSync Init error: %s", SDL_GetError());
+	// 	return false;
+	// }
 
 	// Create a pixel texture sized at the screen size for easy pixel updating
 	pixelTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);

@@ -48,6 +48,8 @@ class SandGrain {
 		const Vec2& getPosition() const;
 		// Get velocity
 		const Vec2& getVelocity() const;
+		// Get partial velocity
+		const Vec2& getPartialVelocity() const;
 
 		// Return the particle's unique identifier
 		unsigned long id() const;
