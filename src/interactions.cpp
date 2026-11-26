@@ -69,7 +69,7 @@ template <class SandType> int SandGrid<SandType>::getSandCount() const {
 }
 
 // stuff needed
-bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt){
+bool collideParticles(SandGrain* a, SandGrain* b){
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
@@ -94,9 +94,7 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt){
     else if (time[0] >= 0)
         t = time[0];
 
-    double ft = dt - t;
-
-    if (t < 0 || t > dt)
+    if (t < 0)
         return false;
 
     Vec2 o1 = a->getPosition().add(a->getVelocity().scale(t));
@@ -104,21 +102,28 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt){
 
     Vec2 nVec = o1.add(o2.negate());
 
-    if (dVel.dotProduct(nVec) < 1e-12)
+    double distance = sqrt(nVec.dotProduct(nVec));
+    double overlap = 2.0 * SandGrain::RADIUS - distance;
+
+    if (overlap > 0) {
+        Vec2 correction = nVec.scale(overlap / (2.0 * distance));
+
+        o1 = o1.add(correction);
+        o2 = o2.add(correction.scale(-1));
+    }
+
+    if (dVel.dotProduct(nVec) <= 0)
         return false;
 
     nVec = nVec.scale(1 / sqrt(nVec.dotProduct(nVec)));
 
     double relNormalV = dVel.dotProduct(nVec);
-    if (relNormalV <= 0)
-        return false;
-
     Vec2 Impulse = nVec.scale((1+BOUNCE_VELOCITY_LOSS_MOD) * relNormalV * 0.5);
 
     Vec2 NewGeneralVel1 = a->getVelocity().add(Impulse);
     Vec2 NewGeneralVel2 = b->getVelocity().add(Impulse.scale(-1));
 
-    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1*-t);
+    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1-t);
     Vec2 NewPartialVel2 = NewGeneralVel2.scale(1-t);
 
     a->partialVelocity = NewPartialVel1;
