@@ -4,6 +4,7 @@
 
 #include <SDL3/SDL_log.h>
 #include <cmath>
+#include <algorithm>
 
 #include "headers/interactions.h"
 #include "headers/math.h"
@@ -61,13 +62,38 @@ int SandGrid::getSandCount() const {
 }
 
 // stuff needed
+void checkParticleCollision(SandGrain* a, SandGrain* b){
+    Vec2 dPos = a->getPosition().add(b->getPosition().negate());
+    Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
-void collideParticles(SandGrain* a, SandGrain* b) {
-	// TODO: CODE THIS
-	// Andrew: The code can go into this function. Whatever you do, make sure the positions of a and b change to where their
-	//     collision are detected, and their velocity is what the new trajectory will be after the collision.
-	// I can do the algorithms of how this function is used
+    double a1 = dVel.dotProduct(dVel);
+    double b1 = 2* dPos.dotProduct(dVel);
+    double c1 = dPos.dotProduct(dPos) - 4* SandGrain::RADIUS;
+
+    if(pow(b1,2) - 4*a1*c1 >= 0 ||c1 <= 0)
+        return;
+
+    double time[2];
+    time[0] = -b1 + sqrt(pow(b1,2) - 4*a1*c1);
+    time[1] = -b1 - sqrt(pow(b1,2) - 4*a1*c1);
+    int n = sizeof(time) / sizeof(time[0]);
+    double t = *min_element(time, time+n);
+
+    Vec2 o1 = a->getPosition().add(a->getVelocity().scale(t));
+    Vec2 o2 = b->getPosition().add(b->getVelocity().scale(t));
+
+    Vec2 nVec = o1.add(o2.negate()).scale(1/(2 * SandGrain::RADIUS));
+    double speed1 = a->getVelocity().dotProduct(nVec);
+    double speed2 = b->getVelocity().dotProduct(nVec);
+
+    Vec2 NewGeneralVel1 = a->getVelocity().add(nVec.scale(speed2-speed1)).scale(1-BOUNCE_VELOCITY_LOSS_MOD);
+    Vec2 NewGeneralVel2 = b->getVelocity().add(nVec.scale(speed1-speed2)).scale(1-BOUNCE_VELOCITY_LOSS_MOD);
+
+    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1-t);
+    Vec2 NewPartialVel2 = NewGeneralVel2.scale(1-t);
 }
+
+
 // 1. Find time at which the particles interact (between 0 and 1 tick)
 //      1a. Relative Velocity = (ending - starting pos 1) - (ending - starting pos 2)
 //      1b. Relative Pos = starting pos 1 - starting pos 2
