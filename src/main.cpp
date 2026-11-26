@@ -108,17 +108,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	// Refresh framebuffer to all black
 	pixelData = vector<unsigned int>(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
 
-	// Calculate particles
-	// Run updateVelocity to create a new velocity from acceleration,
-	// then run updatePosition to calculate the collisions and update the positions
-	for (vector<vector<SandGrain>>& row : grid.the) {
-		for (vector<SandGrain>& col : row) {
-			for (SandGrain& grain : col) {
+	// Step 1: Update velocity from acceleration and refresh partialVelocity for collision purposes
+	for (vector<vector<SandGrain>>& row : grid.the)
+		for (vector<SandGrain>& col : row)
+			for (SandGrain& grain : col)
 				grain.updateVelocity(dt);
-				grain.updatePosition(dt);
-			}
-		}
-	}
 
 	// For the new collisions:
 	//     Move updating position to after this for loop i will describe:
@@ -128,13 +122,44 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	//             collided particles
 	//     THEN finally update the positions after we have the new trajectories
 
-	// Render pixels (update to density map later)
+	// Step 2: Detect collisions, and update positions, and shrink partial velocities until there are no more collisions to
+	//     collide or no more partial velocities to shrink
+	bool collided;
+	do {
+		collided = false;
+		for (vector<vector<SandGrain>>& row : grid.the) {
+			for (vector<SandGrain>& col : row) {
+				for (SandGrain& grain : col) {
+					// Detect screen collisions
+					if (grain.detectScreenBoundsCollision(dt)) {
+						// If the particle is effectively immobile, structurallly stop it
+						if (grain.isSlowEnough())
+							grain.screenBoundStop();
+						else
+							// Reflect the particle if it is going fast enough
+							grain.screenBoundReflect(dt);
+						collided = true;
+					}
+				}
+			}
+		}
+	} while (collided);
+
+	// Step 3: Perform final position updates of particles
+	for (vector<vector<SandGrain>>& row : grid.the)
+		for (vector<SandGrain>& col : row)
+			for (SandGrain& grain : col)
+				grain.updatePosition(dt);
+
+	// Step 4: Update grid placements
+	grid.updateGridPlacements();
+
+	// Step 5: Render pixels (update to density map later)
 	// This just involves updating the grid placements for the particles,
 	// then rendering a circle for each particle
 	for (vector<vector<SandGrain>>& row : grid.the) {
 		for (vector<SandGrain>& col : row) {
 			for (SandGrain& grain : col) {
-				grid.updateGridPlacements();
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 			}
@@ -184,11 +209,11 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	// SandGrain testParticle1({320, 100});
-	// testParticle1.instantAccelerate({400, 200});
-	// grid.addParticle(&testParticle1);
+	SandGrain testParticle1({320, 100});
+	testParticle1.instantAccelerate({4000, 200});
+	grid.addParticle(&testParticle1);
 	SandGrain testParticle2({400, 200});
-	testParticle2.instantAccelerate({-500, 0});
+	testParticle2.instantAccelerate({-7000, -10000000});
 	grid.addParticle(&testParticle2);
 
 	// Main loop

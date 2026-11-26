@@ -8,14 +8,22 @@
 
 #include "math.h"
 
+// Sweet spot velocity stop threshold: no sudden cuts, no unnecessary velocity updates. DO NOT CHANGE
+#define VELOCITY_STOP_THRESHOLD 36
+// Default gravity that makes things look realistic
+#define DEFAULT_GRAVITY 4096
+// Default friction arbitrarily chosen
+#define DEFAULT_FRICTION 0.6
 
 // Defines a single grain of sand
 class SandGrain {
 	protected:
 		// Particle properties
-		Vec2 position, velocity, acceleration;
-		double frictionMult = 0.6;
-		double gravityAccel = 4096;
+		// Partial velocity is the remaining velocity to traverse throughout the current frame, for collision purposes
+		Vec2 position, velocity, partialVelocity, acceleration;
+		double frictionMult = DEFAULT_FRICTION;
+		double gravityAccel = DEFAULT_GRAVITY;
+		// If the current particle is immobile. When setting to true, set velocity and partialVelocity to (0, 0)
 		bool stationary = false;
 
 	public:
@@ -25,9 +33,11 @@ class SandGrain {
 		SandGrain(const Vec2& initialPosition);
 		// Intended to be ran every frame to update the velocity of the particle from the acceleration
 		// Acceleration is per-second-per second, but our timeframe is the time between frames "dt" instead of 1 second
+		// Refreshes partial velocity to be equal to velocity for collision-related purposes
 		void updateVelocity(SDL_Time dt);
 		// Intended to be ran every frame to update the position of the particle from the velocity
 		// Velocity is per-second, but our timeframe is the time between frames "dt" instead of 1 second
+		// This will update the position based on the partial velocity, as the final step in moving the particle,
 		void updatePosition(SDL_Time dt);
 		// Insantly accelerate the particle by adding `velocity` to the particle's velocity
 		void instantAccelerate(const Vec2& velocity);
@@ -36,6 +46,18 @@ class SandGrain {
 		const Vec2& getPosition() const;
 		// Get velocity
 		const Vec2& getVelocity() const;
+
+		// If current velocity is slow enough
+		bool isSlowEnough() const;
+
+		// Single-particle collision detections
+
+		// Detect screen collisions
+		bool detectScreenBoundsCollision(const double& dt) const;
+		// Reflect the particle after detecting a collision with the edges of the window
+		void screenBoundReflect(const double& dt);
+		// Stop the particle when the particle is slow enough to be considered "stopping", after a screen edge collision
+		void screenBoundStop();
 
 		friend void collideParticles(SandGrain* a, SandGrain* b);
 };
