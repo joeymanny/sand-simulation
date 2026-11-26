@@ -74,22 +74,26 @@ bool collideParticles(SandGrain* a, SandGrain* b){
 
     double a1 = dVel.dotProduct(dVel);
     double b1 = 2* dPos.dotProduct(dVel);
-    double c1 = dPos.dotProduct(dPos) - 4* SandGrain::RADIUS;
+    double c1 = dPos.dotProduct(dPos) - 4* pow(SandGrain::RADIUS,2);
 
     // Particles do not interact
-    if(pow(b1,2) - 4*a1*c1 >= 0 ||c1 <= 0)
+    if(pow(b1,2) - 4*a1*c1 < 0 ||a1 == 0)
         return false;
 
     double time[2];
-    time[0] = -b1 + sqrt(pow(b1,2) - 4*a1*c1);
-    time[1] = -b1 - sqrt(pow(b1,2) - 4*a1*c1);
-    int n = sizeof(time) / sizeof(time[0]);
-    double t = *min_element(time, time+n);
+    time[0] = (-b1 + sqrt(pow(b1,2) - 4*a1*c1)) / (2* a1);
+    time[1] = (-b1 - sqrt(pow(b1,2) - 4*a1*c1)) / (2* a1);
+    double t = min(time[0], time[1]);
+
+    if (t < 0)
+        return false;
 
     Vec2 o1 = a->getPosition().add(a->getVelocity().scale(t));
     Vec2 o2 = b->getPosition().add(b->getVelocity().scale(t));
 
-    Vec2 nVec = o1.add(o2.negate()).scale(1/(2 * SandGrain::RADIUS));
+    Vec2 nVec = o1.add(o2.negate());
+    nVec = nVec.scale(1 / sqrt(nVec.dotProduct(nVec)));
+
     double speed1 = a->getVelocity().dotProduct(nVec);
     double speed2 = b->getVelocity().dotProduct(nVec);
 
