@@ -3,6 +3,7 @@
  */
 
 #include <SDL3/SDL_log.h>
+#include <SDL3/SDL_stdinc.h>
 #include <cmath>
 #include <algorithm>
 
@@ -68,7 +69,7 @@ template <class SandType> int SandGrid<SandType>::getSandCount() const {
 }
 
 // stuff needed
-bool collideParticles(SandGrain* a, SandGrain* b){
+bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt){
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
@@ -76,31 +77,48 @@ bool collideParticles(SandGrain* a, SandGrain* b){
     double b1 = 2* dPos.dotProduct(dVel);
     double c1 = dPos.dotProduct(dPos) - 4* pow(SandGrain::RADIUS,2);
 
+    double discr = pow(b1,2) - 4*a1*c1;
     // Particles do not interact
-    if(pow(b1,2) - 4*a1*c1 < 0 ||a1 == 0)
+    if(discr < 0 ||a1 < 1e-12)
         return false;
 
     double time[2];
-    time[0] = (-b1 + sqrt(pow(b1,2) - 4*a1*c1)) / (2* a1);
-    time[1] = (-b1 - sqrt(pow(b1,2) - 4*a1*c1)) / (2* a1);
-    double t = min(time[0], time[1]);
+    time[0] = (-b1 + sqrt(discr)) / (2* a1);
+    time[1] = (-b1 - sqrt(discr)) / (2* a1);
+    double t = -1;
 
-    if (t < 0)
+    if (time[1] >= 0 && time[0] >= 0)
+        t = min(time[1], time[0]);
+    else if (time[1] >= 0)
+        t = time[1];
+    else if (time[0] >= 0)
+        t = time[0];
+
+    double ft = dt - t;
+
+    if (t < 0 || t > dt)
         return false;
 
     Vec2 o1 = a->getPosition().add(a->getVelocity().scale(t));
     Vec2 o2 = b->getPosition().add(b->getVelocity().scale(t));
 
     Vec2 nVec = o1.add(o2.negate());
+
+    if (dVel.dotProduct(nVec) < 1e-12)
+        return false;
+
     nVec = nVec.scale(1 / sqrt(nVec.dotProduct(nVec)));
 
-    double speed1 = a->getVelocity().dotProduct(nVec);
-    double speed2 = b->getVelocity().dotProduct(nVec);
+    double relNormalV = dVel.dotProduct(nVec);
+    if (relNormalV <= 0)
+        return false;
 
-    Vec2 NewGeneralVel1 = a->getVelocity().add(nVec.scale(speed2-speed1)).scale(1-BOUNCE_VELOCITY_LOSS_MOD);
-    Vec2 NewGeneralVel2 = b->getVelocity().add(nVec.scale(speed1-speed2)).scale(1-BOUNCE_VELOCITY_LOSS_MOD);
+    Vec2 Impulse = nVec.scale((1+BOUNCE_VELOCITY_LOSS_MOD) * relNormalV * 0.5);
 
-    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1-t);
+    Vec2 NewGeneralVel1 = a->getVelocity().add(Impulse);
+    Vec2 NewGeneralVel2 = b->getVelocity().add(Impulse.scale(-1));
+
+    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1*-t);
     Vec2 NewPartialVel2 = NewGeneralVel2.scale(1-t);
 
     a->partialVelocity = NewPartialVel1;
