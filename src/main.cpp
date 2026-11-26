@@ -133,9 +133,39 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	bool collided;
 	do {
 		collided = false;
+
+		// Keep track of the grains of sand we have already looped through
+		SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 		for (vector<vector<SandGrain>>& row : grid.the) {
 			for (vector<SandGrain>& col : row) {
 				for (SandGrain& grain : col) {
+					// Perform and detect particle collisions using an O(n choose 2) selection algorithm,
+					//     limited by the grids (TODO: Limit them by the grids)
+					if (ptrGrid.getSandCount() > 0) {
+						for (vector<vector<SandGrain*>>& ptrRow : ptrGrid.the) {
+							for (vector<SandGrain*>& ptrCol : ptrRow) {
+								for (SandGrain* otherGrain : ptrCol) {
+									// If the two grains of sand are not the same grain of sand, check collision
+									if (grain.id() != otherGrain->id()) {
+										SDL_Log("Checking particles %ld with %ld", grain.id(), otherGrain->id());
+										collided = collideParticles(&grain, otherGrain); // This will also update their properties
+										if (collided) {
+											SDL_Log("Collision!");
+											break; // Stop the entire damn loop when a single collision happens
+										}
+									}
+								}
+								if (collided) break; // Stop the entire damn loop when a single collision happens
+							}
+							if (collided) break; // Stop the entire damn loop when a single collision happens
+						}
+					}
+
+					// Add the current particle to the matrix of particles that have already been collision-calculated
+					SandGrain* tempPtr = &grain; // This points to the sandgrain
+					ptrGrid.addParticle(&tempPtr); // Pointer to the pointer, yet it pushes the SandGrain* to the matrix. It will work
+
 					// Detect screen collisions
 					if (grain.detectScreenBoundsCollision(dt)) {
 						// If the particle is effectively immobile, structurallly stop it
@@ -229,11 +259,11 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	SandGrain testParticle1({320, 100});
-	testParticle1.instantAccelerate({4000, 200});
+	SandGrain testParticle1({200, 100});
+	testParticle1.instantAccelerate({300, 0});
 	grid.addParticle(&testParticle1);
-	SandGrain testParticle2({400, 200});
-	testParticle2.instantAccelerate({-7000, -10000000});
+	SandGrain testParticle2({400, 100});
+	testParticle2.instantAccelerate({-300, 0});
 	grid.addParticle(&testParticle2);
 
 	// Main loop

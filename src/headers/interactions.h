@@ -12,7 +12,8 @@ using namespace std;
 // Constantinoples
 
 // Sand state
-class SandGrid {
+// This class is only implemented for SandGrain and SandGrid, as seen in interactions.cpp
+template <class SandType = SandGrain> class SandGrid {
 	private:
 		int sandCount = 0;
 	public:
@@ -29,7 +30,7 @@ class SandGrid {
 				}
 			}
 		 */
-		vector<vector<vector<SandGrain>>> the;
+		vector<vector<vector<SandType>>> the;
 
 		// Constructor
 		SandGrid(int screenWidth, int screenHeight);
@@ -37,7 +38,7 @@ class SandGrid {
 		// Add a sand particle to the grid
 		void addParticle(const Vec2& pos);
 		// Add a sand particle to the grid
-		void addParticle(SandGrain* grain);
+		void addParticle(const SandType* grain);
 		// Remove a random sand particle from the grid
 		void removeParticle();
 
@@ -47,6 +48,8 @@ class SandGrid {
 		// Update grid placements for position updates
 		void updateGridPlacements();
 };
+
+bool collideParticles(SandGrain* a, SandGrain* b);
 
 // stuff needed
 // One thing to have is a function to convert particle positions to screen coordinates based on window size and zoom

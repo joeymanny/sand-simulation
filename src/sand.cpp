@@ -10,8 +10,17 @@
 #include "headers/math.h"
 
 SandGrain::SandGrain(const Vec2& startingPosition) {
+	// Assign a unique identifier
+	static unsigned long id = 0;
+	identifier = id++;
+
+	// Put starting values
 	position = startingPosition;
 	acceleration.set(0, gravityAccel);
+}
+
+unsigned long SandGrain::id() const {
+	return identifier;
 }
 
 const Vec2& SandGrain::getPosition() const {
@@ -120,5 +129,6 @@ void SandGrain::screenBoundStop() {
 }
 
 bool SandGrain::isSlowEnough() const {
+	// TODO: incorporate angle into this, so that we don't get sudden stops (more angled downward, higher threshold)
 	return velocity.magnitude() < VELOCITY_STOP_THRESHOLD;
 }

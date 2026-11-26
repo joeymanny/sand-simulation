@@ -10,30 +10,36 @@
 #include "headers/math.h"
 #include "headers/common.h"
 
-SandGrid::SandGrid(int screenWidth, int screenHeight) {
+template <class SandType> SandGrid<SandType>::SandGrid(int screenWidth, int screenHeight) {
 	// Divide up the screen into cells
 	cellsX = screenWidth / GRID_CELL_WIDTH;
 	cellsY = screenHeight / GRID_CELL_WIDTH;
 
 	// Allocate memory for the cells
 	the.resize(cellsY);
-	for (vector<vector<SandGrain>>& row : the)
+	for (vector<vector<SandType>>& row : the)
 		row.resize(cellsX);
 }
 
-void SandGrid::addParticle(const Vec2& pos) {
+template <> void SandGrid<SandGrain>::addParticle(const Vec2& pos) {
 	// Create a new particle in the required cell
 	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(SandGrain(pos));
 	sandCount++;
 }
-void SandGrid::addParticle(SandGrain* grain) {
+template <> void SandGrid<SandGrain>::addParticle(const SandGrain* grain) { // Whole form
 	// Add an existing particle in the required cell
 	Vec2 pos = grain->getPosition();
 	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(*grain);
 	sandCount++;
 }
+template <> void SandGrid<SandGrain*>::addParticle(SandGrain* const* grain) { // Pointer form (VERY weird definition)
+	// Add an existing particle in the required cell
+	Vec2 pos = (*grain)->getPosition();
+	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(*grain);
+	sandCount++;
+}
 
-void SandGrid::updateGridPlacements() {
+template <> void SandGrid<SandGrain>::updateGridPlacements() {
 	// For each grid row,
 	for (int row = 0; row < the.size(); row++)
 		// For each grid col,
@@ -57,12 +63,12 @@ void SandGrid::updateGridPlacements() {
 			}
 }
 
-int SandGrid::getSandCount() const {
+template <class SandType> int SandGrid<SandType>::getSandCount() const {
 	return sandCount;
 }
 
 // stuff needed
-void collideParticles(SandGrain* a, SandGrain* b){
+bool collideParticles(SandGrain* a, SandGrain* b){
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
@@ -70,8 +76,9 @@ void collideParticles(SandGrain* a, SandGrain* b){
     double b1 = 2* dPos.dotProduct(dVel);
     double c1 = dPos.dotProduct(dPos) - 4* SandGrain::RADIUS;
 
+    // Particles do not interact
     if(pow(b1,2) - 4*a1*c1 >= 0 ||c1 <= 0)
-        return;
+        return false;
 
     double time[2];
     time[0] = -b1 + sqrt(pow(b1,2) - 4*a1*c1);
@@ -100,6 +107,8 @@ void collideParticles(SandGrain* a, SandGrain* b){
 
     a->position = o1;
     b->position = o2;
+
+    return true;
 }
 
 
@@ -121,3 +130,7 @@ void collideParticles(SandGrain* a, SandGrain* b){
 //      3d. New Velociy of 2 = Velocity of 2 + dot(dot(diff of velo, relative normal), relative normal)
 //      3e. Ending Pos 1 = Velocity of 1 * t + (1 - friction) * (1 - Time) * New Velocity of 1
 //      3e. Ending Pos 2 = Velocity of 2 * t + (1 - friction) * (1 - Time) * New Velocity of 2
+
+// Explicit instantiation
+template class SandGrid<SandGrain>;
+template class SandGrid<SandGrain*>;

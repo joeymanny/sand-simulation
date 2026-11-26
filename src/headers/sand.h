@@ -25,6 +25,8 @@ class SandGrain {
 		double gravityAccel = DEFAULT_GRAVITY;
 		// If the current particle is immobile. When setting to true, set velocity and partialVelocity to (0, 0)
 		bool stationary = false;
+		// Unique particle identifier for equality purposes
+		unsigned long identifier;
 
 	public:
 		static constexpr double RADIUS = 20; // In pixels
@@ -47,6 +49,9 @@ class SandGrain {
 		// Get velocity
 		const Vec2& getVelocity() const;
 
+		// Return the particle's unique identifier
+		unsigned long id() const;
+
 		// If current velocity is slow enough
 		bool isSlowEnough() const;
 
@@ -59,5 +64,5 @@ class SandGrain {
 		// Stop the particle when the particle is slow enough to be considered "stopping", after a screen edge collision
 		void screenBoundStop();
 
-		friend void collideParticles(SandGrain* a, SandGrain* b);
+		friend bool collideParticles(SandGrain* a, SandGrain* b);
 };

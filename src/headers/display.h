@@ -89,7 +89,7 @@ void drawChar(std::vector<unsigned int>* pixels, const Vec2& location, float sca
 
 // draws a density map of the given sand grid to the given pixels. fully overwrites
 // the inputted pixels.
-void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid);
+void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid<SandGrain>& sandGrid);
 
 // returns a brightness factor within [0,1) for a given number of sand
 // grains in one pixel (char is acting as an unsigned 8-bit int)

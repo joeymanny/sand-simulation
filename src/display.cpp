@@ -127,7 +127,7 @@ void circle(vector<unsigned int>* pixels, const Vec2& center, int radius, unsign
 	}
 }
 
-void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid){
+void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid<SandGrain>& sandGrid){
 	using std::vector;
 	// we make a 2d vector of the same shape and size as the screen
 	// char is acting as a 8-bit unsigned int here
@@ -150,7 +150,7 @@ void drawDensityMap(std::vector<unsigned int>* pixels, const SandGrid& sandGrid)
 		for (int j = 0; j < SCREEN_HEIGHT; j++){
 			// multiply, then cast, then shift left and right by 2, then add 0xFF
 			double fac = pixelBrightness(countGrid[i][j]);
-			
+
 			// we have to apply the factor to each channel individually
 			int red = SAND_COLOR_R * fac;
 			int green = SAND_COLOR_G * fac;
@@ -174,7 +174,7 @@ double pixelBrightness(char count){
 	// put into desmos to visualize
 	// should never divide by zero since char cannot be negative
 	// will divide by zero if (float)count == -1.0
-	return (-1.0 / (COLOR_RAMP_SHARPNESS * (float)count + 1.0)) + 1.0; 
+	return (-1.0 / (COLOR_RAMP_SHARPNESS * (float)count + 1.0)) + 1.0;
 }
 
 
