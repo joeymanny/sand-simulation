@@ -346,6 +346,13 @@ int main() {
 		SDL_Time tick;
 		SDL_GetCurrentTime(&tick);
 
+		// linear congruent radomizer or something
+		// if (tick % 2000 < 100){
+		// 	SandGrain testParticle2({SCREEN_WIDTH / 2.0 + (tick % 1000 - 50), 50});
+		// 	grid.addParticle(&testParticle2);
+		// 	SDL_Log("%d", grid.getSandCount());
+		// }
+
 		// Sleep until you are able to render the next frame. This is what allows framerate limiting
 		SDL_Time renderTime = tick - now;
 		if (renderTime < NS_PER_FRAME)
