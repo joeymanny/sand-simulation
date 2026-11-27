@@ -154,6 +154,9 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
     a->partialVelocity = newVelocityA.scale(remainingTime);
     b->partialVelocity = newVelocityB.scale(remainingTime);
 
+    a->stationary = false;
+    a->stationary = false;
+
     return true;
 }
 
