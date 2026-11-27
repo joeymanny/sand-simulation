@@ -153,9 +153,11 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	//     collide or no more partial velocities to shrink
 	// For checking collisions, you only need to check the grids that are reachable by the maximum velocity magnitude of all particles
 	bool collided;
+	unsigned int loops = 0;
 	do {
 		double maxVelocityMagnitude = 0;
 		collided = false;
+		loops++;
 
 		// Refresh the grid of pointers to already-collided sandgrains
 		ptrGrid.zero();
@@ -166,6 +168,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 				for (SandGrain& grain : col) {
 					// Calculate the highest velocity observed for gridding purposes
 					maxVelocityMagnitude = max(maxVelocityMagnitude, grain.getPartialVelocity().magnitude());
+
+					if (grain.getPartialVelocity().magnitude() < 1e-5 && loops > 5)
+						continue;
 
 					// Get how far one should extend the search area by how big the max velocity magnitude is
 					Vec2 hypotheticalPosition = grain.getPosition().add(grain.getPartialVelocity().scale(dtToSec(dt)));
@@ -183,10 +188,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 							for (int ptrCol = max(0, gridX - expandGrid); ptrCol <= min(gridX + expandGrid, ptrGrid.cellsX - 1); ptrCol++) {
 								for (int grainIndex = 0; grainIndex < ptrGrid.the[ptrRow][ptrCol].size(); grainIndex++) {
 									SandGrain* otherGrain = ptrGrid.the[ptrRow][ptrCol][grainIndex];
-
-									// Dont check this particle if it is basically immobile
-									if (otherGrain->getVelocity().magnitude() < 1e-5)
-										continue;
 
 									// If the two grains of sand are not the same grain of sand, check collision
 									if (grain.id() != otherGrain->id()) {
