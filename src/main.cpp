@@ -152,17 +152,23 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 								for (SandGrain* otherGrain : ptrCol) {
 									// If the two grains of sand are not the same grain of sand, check collision
 									if (grain.id() != otherGrain->id()) {
-										Vec2 beforeVelocity = grain.getVelocity(); // TESTING CODE
-										Vec2 beforePVelocity = grain.getPartialVelocity(); // TESTING CODE
+										Vec2 beforeVelocityP0 = grain.getVelocity(); // TESTING CODE
+										Vec2 beforePVelocityP0 = grain.getPartialVelocity(); // TESTING CODE
+										Vec2 beforeVelocityP1 = otherGrain->getVelocity(); // TESTING CODE
+										Vec2 beforePVelocityP1 = otherGrain->getPartialVelocity(); // TESTING CODE
 										collided = collideParticles(&grain, otherGrain); // This will also update their properties
 										if (collided) {
 											SDL_Log("Particle Collision!");
 
 											// TESTING CODE: Print velocity before and after, then visualize the collision stop
-											Vec2 afterVelocity = grain.getVelocity();
-											Vec2 afterPVelocity = grain.getPartialVelocity();
-											SDL_Log("\x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
-											SDL_Log("\x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
+											Vec2 afterVelocityP0 = grain.getVelocity();
+											Vec2 afterPVelocityP0 = grain.getPartialVelocity();
+											Vec2 afterVelocityP1 = otherGrain->getVelocity();
+											Vec2 afterPVelocityP1 = otherGrain->getPartialVelocity();
+											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", grain.id(), beforeVelocityP0.x(), beforeVelocityP0.y(), afterVelocityP0.x(), afterVelocityP0.y());
+											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", grain.id(), beforePVelocityP0.x(), beforePVelocityP0.y(), afterPVelocityP0.x(), afterPVelocityP0.y());
+											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", otherGrain->id(), beforeVelocityP1.x(), beforeVelocityP1.y(), afterVelocityP1.x(), afterVelocityP1.y());
+											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", otherGrain->id(), beforePVelocityP1.x(), beforePVelocityP1.y(), afterPVelocityP1.x(), afterPVelocityP1.y());
 											circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 											circle(&permanentTrail, otherGrain->getPosition(), 5, 0xFF0000FF);
 											a += 4;
@@ -194,8 +200,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 						// TESTING/DEMO CODE: partial velocity
 						Vec2 afterVelocity = grain.getVelocity();
 						Vec2 afterPVelocity = grain.getPartialVelocity();
-						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
-						SDL_Log("\x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
+						SDL_Log("\x1B[33mP%ld \x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", grain.id(), beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
+						SDL_Log("\x1B[33mP%ld \x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", grain.id(), beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
 					}
 
 					// Add the current particle to the matrix of particles that have already been collision-calculated
