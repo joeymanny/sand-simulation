@@ -7,24 +7,21 @@
  * This source file is the entry point for the sand simulation program.
  */
 
-#include "headers/math.h"
 constexpr char TITLE[] = "Unnamed Sand Simulation";
 
 // Simple Directmedia Layer
+#include <cmath>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_log.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_time.h>
-#include <SDL3/SDL_video.h>
-#include <cmath>
 #include <vector>
 
 // Our header files
-#include "headers/sand.h"
-#include "headers/interactions.h"
-#include "headers/display.h"
 #include "headers/common.h"
+#include "headers/display.h"
+#include "headers/interactions.h"
+#include "headers/math.h"
+#include "headers/sand.h"
 
 // Global constants
 constexpr int FPS_LIMIT = 60;
