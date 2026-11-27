@@ -7,6 +7,8 @@
  * This source file is the entry point for the sand simulation program.
  */
 
+constexpr char TITLE[] = "Unnamed Sand Simulation";
+
 // Simple Directmedia Layer
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -348,7 +350,7 @@ bool windowInit() {
 	}
 
 	// Create a window, fail if error
-	if (!SDL_CreateWindowAndRenderer("Hello World", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer)) {
+	if (!SDL_CreateWindowAndRenderer(TITLE, SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer)) {
 		SDL_Log("Window creation error: %s", SDL_GetError());
 		return false;
 	}
