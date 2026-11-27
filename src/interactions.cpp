@@ -9,6 +9,7 @@
 #include "headers/interactions.h"
 #include "headers/math.h"
 #include "headers/common.h"
+#include "headers/sand.h"
 
 template <class SandType> SandGrid<SandType>::SandGrid(int screenWidth, int screenHeight) {
 	// Divide up the screen into cells
@@ -160,8 +161,8 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
     a->position = collisionA;
     b->position = collisionB;
 
-    a->velocity = newVelocityA;
-    b->velocity = newVelocityB;
+    a->velocity = newVelocityA.scale(1 - SandGrain::frictionMult);
+    b->velocity = newVelocityB.scale(1 - SandGrain::frictionMult);
 
     double remainingTime = deltaTime - t;
 

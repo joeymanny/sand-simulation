@@ -14,7 +14,7 @@
 // Default gravity that makes things look realistic
 #define DEFAULT_GRAVITY 4096
 // Default friction arbitrarily chosen
-#define DEFAULT_FRICTION 0.6
+#define DEFAULT_FRICTION .5
 
 // Defines a single grain of sand
 class SandGrain {
