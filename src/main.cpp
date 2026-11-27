@@ -126,9 +126,9 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
 		}
 
-		// Detect r-keyup (keydown + keyup) to reset the particles
-		if (e->type == SDL_EVENT_KEY_UP) {
-			if (e->key.key == SDLK_R) {
+		// Detect r-keydown to reset the particles
+		if (e->type == SDL_EVENT_KEY_DOWN) {
+			if (e->key.key == SDLK_R && !e->key.repeat) {
 				initializeParticles();
 				return true;
 			}
