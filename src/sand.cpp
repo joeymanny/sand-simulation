@@ -87,7 +87,7 @@ void SandGrain::screenBoundReflect(const double& dt) {
 	if (xReflect) {
 		// Reflect the velocity and attenuate it
 		velocity.set(-velocity.x(), velocity.y());
-		velocity.addAssign(velocity.scale(BOUNCE_VELOCITY_LOSS_MOD).negate());
+		velocity.addAssign(velocity.scale(BOUNCE_VELOCITY_LOSS_MOD * angleMod(velocity.direction(), true, 0.5)).negate());
 	}
 
 	// Y-axis reflection
@@ -110,7 +110,7 @@ void SandGrain::screenBoundReflect(const double& dt) {
 	if (yReflect) {
 		// Reflect the velocity and attenuate it
 		velocity.set(velocity.x(), -velocity.y());
-		velocity.addAssign(velocity.scale(BOUNCE_VELOCITY_LOSS_MOD).negate());
+		velocity.addAssign(velocity.scale(BOUNCE_VELOCITY_LOSS_MOD * angleMod(velocity.direction(), false, 2)).negate());
 	}
 
 	// Combine reflections to update position and set new cut trajectory
@@ -134,11 +134,5 @@ void SandGrain::screenBoundStop() {
 
 bool SandGrain::isSlowEnough() const {
 	// Less steep downward angle = lower velocity stop threshold
-	double angle = velocity.direction();
-	if (angle < 0)
-		angle = -angle;
-	if (angle >= PI)
-		angle -= PI;
-	double modifier = pow((HALF_PI - fabs(angle - HALF_PI)) / HALF_PI, 5);
-	return velocity.magnitude() < VELOCITY_STOP_THRESHOLD * modifier;
+	return velocity.magnitude() < VELOCITY_STOP_THRESHOLD * angleMod(velocity.direction(), false, 5);
 }

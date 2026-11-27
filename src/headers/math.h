@@ -54,3 +54,8 @@ class Vec2 {
 		// -vec but modifies
 		void negateAssign();
 };
+
+// Provides a modifier (float 0-1) based on the angle of something.
+// If `side` is false, 1 will be achieved for completely vertical angles
+// If `side` is true, 1 will be achieved for completely horizontal angles
+double angleMod(double radians, bool side, double steepness);

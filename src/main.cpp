@@ -301,14 +301,17 @@ int main() {
 	// Initialize particles
 	SandGrain testParticle0({200, 100});
 	// testParticle0.instantAccelerate({0, 0});
-	testParticle0.instantAccelerate({3000000, 100000}); // Uncomment this to test more complex collisions
+	testParticle0.instantAccelerate({-9999999, -9999999}); // Uncomment this to test more complex collisions
 	grid.addParticle(&testParticle0);
 	SandGrain testParticle1({225, 200});
-	testParticle1.instantAccelerate({300, 0});
+	testParticle1.instantAccelerate({-9999999, 9999999});
 	grid.addParticle(&testParticle1);
 	SandGrain testParticle2({600, 50});
-	testParticle2.instantAccelerate({10000, -9999999999999});
+	testParticle2.instantAccelerate({9999999, -9999999});
 	grid.addParticle(&testParticle2);
+	SandGrain testParticle3({20, 20});
+	testParticle3.instantAccelerate({9999999, 9999999});
+	grid.addParticle(&testParticle3);
 
 	// Main loop
 	while (loop(&e, dt)) {

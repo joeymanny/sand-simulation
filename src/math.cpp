@@ -81,3 +81,18 @@ void Vec2::negateAssign() {
 	xPos = -xPos;
 	yPos = -yPos;
 }
+
+double angleMod(double radians, bool side, double steepness) {
+	radians = fabs(radians);
+	if (side) {
+		if (radians >= PI)
+			radians = 2 * PI - radians;
+		if (radians <= HALF_PI)
+			radians = PI - radians;
+		return pow((radians - HALF_PI) / HALF_PI, steepness);
+	} else {
+		if (radians >= PI)
+			radians -= PI;
+		return pow((HALF_PI - fabs(radians - HALF_PI)) / HALF_PI, steepness);
+	}
+}
