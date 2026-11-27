@@ -5,7 +5,6 @@
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_stdinc.h>
 #include <cmath>
-#include <algorithm>
 
 #include "headers/interactions.h"
 #include "headers/math.h"
@@ -22,21 +21,26 @@ template <class SandType> SandGrid<SandType>::SandGrid(int screenWidth, int scre
 		row.resize(cellsX);
 }
 
+int screenClamp(double positionComponent, bool isY) {
+	int limit = isY ? SCREEN_HEIGHT : SCREEN_WIDTH;
+	return max(0, min((int)positionComponent, limit - 1));
+}
+
 template <> void SandGrid<SandGrain>::addParticle(const Vec2& pos) {
 	// Create a new particle in the required cell
-	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(SandGrain(pos));
+	the.at(screenClamp(pos.y(), true) / GRID_CELL_WIDTH).at(screenClamp(pos.x(), false) / GRID_CELL_WIDTH).push_back(SandGrain(pos));
 	sandCount++;
 }
 template <> void SandGrid<SandGrain>::addParticle(const SandGrain* grain) { // Whole form
 	// Add an existing particle in the required cell
 	Vec2 pos = grain->getPosition();
-	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(*grain);
+	the.at(screenClamp(pos.y(), true) / GRID_CELL_WIDTH).at(screenClamp(pos.x(), false) / GRID_CELL_WIDTH).push_back(*grain);
 	sandCount++;
 }
 template <> void SandGrid<SandGrain*>::addParticle(SandGrain* const* grain) { // Pointer form (VERY weird definition)
 	// Add an existing particle in the required cell
 	Vec2 pos = (*grain)->getPosition();
-	the.at(pos.y() / GRID_CELL_WIDTH).at(pos.x() / GRID_CELL_WIDTH).push_back(*grain);
+	the.at(screenClamp(pos.y(), true) / GRID_CELL_WIDTH).at(screenClamp(pos.x(), false) / GRID_CELL_WIDTH).push_back(*grain);
 	sandCount++;
 }
 
