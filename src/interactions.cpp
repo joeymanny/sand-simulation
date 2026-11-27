@@ -105,8 +105,9 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
     double t = -1;
 
     if (C <= 0) {
-        t = 0;
-        return 0; }
+        if (dPos.dotProduct(dVel) >= 0)
+            return false;
+        t = 0; }
     else {
         if (A < 1e-10 || B >= 0)
             return false;
