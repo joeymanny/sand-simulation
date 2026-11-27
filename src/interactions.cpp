@@ -69,77 +69,92 @@ template <class SandType> int SandGrid<SandType>::getSandCount() const {
 }
 
 // stuff needed
+
 bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
+    if (a == nullptr || b == nullptr || a == b)
+        return false;
+
+    double deltaTime = dtToSec(dt);
+
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 
-    double a1 = dVel.dotProduct(dVel);
-    double b1 = 2* dPos.dotProduct(dVel);
-    double c1 = dPos.dotProduct(dPos) - 4* pow(SandGrain::RADIUS,2);
+    double radiusSum = 2 * SandGrain::RADIUS;
 
-    double discr = pow(b1,2) - 4*a1*c1;
-    // Particles do not interact
-    if(discr < 0 ||a1 < 1e-12)
-        return false;
+    double A = dVel.dotProduct(dVel);
+    double B = 2 * dPos.dotProduct(dVel);
+    double C = dPos.dotProduct(dPos) - radiusSum * radiusSum;
 
-    double time[2];
-    time[0] = (-b1 + sqrt(discr)) / (2* a1);
-    time[1] = (-b1 - sqrt(discr)) / (2* a1);
     double t = -1;
 
-    if (time[1] >= 0 && time[0] >= 0)
-        t = min(time[1], time[0]);
-    else if (time[1] >= 0)
-        t = time[1];
-    else if (time[0] >= 0)
-        t = time[0];
+    if (C <= 0) {
+        t = 0;
+        return 0; }
+    else {
+        if (A < 1e-10 || B >= 0)
+            return false;
 
-    if (t < 0)
+        double discriminant = B * B - 4 * A * C;
+        if (discriminant < 0)
+            return false;
+
+        double sqrtD = sqrt(discriminant);
+        double t1 = (-B - sqrtD) / (2 * A);
+
+        if (t1 < 0 || t1 > deltaTime)
+            return false;
+
+        t = t1; }
+
+    Vec2 collisionA = a->getPosition().add(a->getVelocity().scale(t));
+    Vec2 collisionB = b->getPosition().add(b->getVelocity().scale(t));
+    Vec2 difference = collisionA.add(collisionB.negate());
+
+    double distance = difference.magnitude();
+
+    // Make sure that it updated correctly and is not NaN
+    if (distance < 1e-10 || !isfinite(distance))
         return false;
 
-    Vec2 o1 = a->getPosition().add(a->getVelocity().scale(t));
-    Vec2 o2 = b->getPosition().add(b->getVelocity().scale(t));
+    Vec2 normal = difference.scale(1 / distance);
 
-    Vec2 nVec = o1.add(o2.negate());
+    double relativeNormalVelocity = dVel.dotProduct(normal);
 
-    double distance = sqrt(nVec.dotProduct(nVec));
-    double overlap = 2.0 * SandGrain::RADIUS - distance;
+    Vec2 newVelocityA = a->getVelocity();
+    Vec2 newVelocityB = b->getVelocity();
+
+    if (relativeNormalVelocity < -1e-9) {
+        Vec2 impulse = normal.scale(-(1 + 2 * BOUNCE_VELOCITY_LOSS_MOD) * relativeNormalVelocity * 0.5);
+
+        newVelocityA = newVelocityA.add(impulse);
+        newVelocityB = newVelocityB.add(impulse.scale(-1)); }
+
+    double overlap = radiusSum - distance;
 
     if (overlap > 0) {
-        Vec2 correction = nVec.scale(overlap / (2.0 * distance));
+        double slop = 0.01;
+        double correctionAmount = (overlap + slop) * 0.5;
+        Vec2 correction = normal.scale(correctionAmount);
 
-        o1 = o1.add(correction);
-        o2 = o2.add(correction.scale(-1));
-    }
+        collisionA = collisionA.add(correction);
+        collisionB = collisionB.add(correction.scale(-1)); }
 
-    if (dVel.dotProduct(nVec) <= 0)
-        return false;
+    a->position = collisionA;
+    b->position = collisionB;
 
-    nVec = nVec.scale(1 / sqrt(nVec.dotProduct(nVec)));
+    a->velocity = newVelocityA;
+    b->velocity = newVelocityB;
 
-    double relNormalV = dVel.dotProduct(nVec);
-    Vec2 Impulse = nVec.scale((1+BOUNCE_VELOCITY_LOSS_MOD) * relNormalV * 0.5);
+    double remainingTime = deltaTime - t;
 
-    Vec2 NewGeneralVel1 = a->getVelocity().add(Impulse);
-    Vec2 NewGeneralVel2 = b->getVelocity().add(Impulse.scale(-1));
-
-    Vec2 NewPartialVel1 = NewGeneralVel1.scale(1-t);
-    Vec2 NewPartialVel2 = NewGeneralVel2.scale(1-t);
-
-    a->partialVelocity = NewPartialVel1;
-    b->partialVelocity = NewPartialVel2;
-
-    a->velocity = NewGeneralVel1;
-    b->velocity = NewGeneralVel2;
-
-    a->position = o1;
-    b->position = o2;
-
-    a->stationary = false;
-    b->stationary = false;
+    a->partialVelocity = newVelocityA.scale(remainingTime);
+    b->partialVelocity = newVelocityB.scale(remainingTime);
 
     return true;
 }
+
+
+
 
 
 // 1. Find time at which the particles interact (between 0 and 1 tick)
