@@ -78,6 +78,13 @@ template <class SandType> void SandGrid<SandType>::zero() {
 			cell = vector<SandType>();
 }
 
+template <class SandType> int SandGrid<SandType>::getGridX(double x) const {
+	return screenClamp(x, false) / GRID_CELL_WIDTH;
+}
+template <class SandType> int SandGrid<SandType>::getGridY(double y) const {
+	return screenClamp(y, true) / GRID_CELL_WIDTH;
+}
+
 // stuff needed
 
 bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {

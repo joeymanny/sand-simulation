@@ -18,7 +18,8 @@ template <class SandType = SandGrain> class SandGrid {
 		int sandCount = 0;
 	public:
 		// Width AND height of cell grid
-		static constexpr int GRID_CELL_WIDTH = 10;
+		// This should be greater than twice the radius of a particle
+		static constexpr int GRID_CELL_WIDTH = 50;
 		int cellsX, cellsY;
 
 		/*
@@ -50,6 +51,10 @@ template <class SandType = SandGrain> class SandGrid {
 
 		// Zero out the entire sand grid
 		void zero();
+
+		// Get the grid placement of a position, limited by the grid bounds
+		int getGridX(double x) const;
+		int getGridY(double y) const;
 };
 
 bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt);

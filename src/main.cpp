@@ -7,6 +7,7 @@
  * This source file is the entry point for the sand simulation program.
  */
 
+#include "headers/math.h"
 constexpr char TITLE[] = "Unnamed Sand Simulation";
 
 // Simple Directmedia Layer
@@ -35,12 +36,22 @@ constexpr long NS_PER_FRAME = NS_PER_SEC / FPS_LIMIT;
 // GRAVITY_ACCEL -> [1 * GRAVITY, 2 * GRAVITY]     NOT FINAL VALUES
 
 // Constants for the entire window
+// The window itself
 SDL_Window* window = nullptr;
+// The renderer
 SDL_Renderer* renderer = nullptr;
+// The texture object for the pixels we will put on the screen
 SDL_Texture* pixelTexture = nullptr;
+// The data that pixelTexture will use for rendering
 vector<unsigned int> pixelData(SCREEN_WIDTH * SCREEN_HEIGHT, 0x000000FF);
+// More data that is not zeroed each loop
 vector<unsigned int> permanentTrail(SCREEN_WIDTH * SCREEN_HEIGHT, 0x00000000);
+
+// The grid of particles
 SandGrid grid(SCREEN_WIDTH, SCREEN_HEIGHT);
+// Keep track of the grains of sand we have already looped through during the collision checker loop
+// This should be zeroed at the start of every loop
+SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // this const must be updated by hand.
 // it must EXCLUDE the NONE variant.
@@ -85,9 +96,6 @@ void windowClose();
 //     the window. SDL_RenderPresent happens at the END of every frame for consistency, rather than
 //     somewhere in the middle
 bool loop(SDL_Event* e, SDL_Time dt) {
-	// Keep track of the grains of sand we have already looped through during the collision checker loop
-	static SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	// Keep track of time (modulated) for framerate rendering purposes
 	static unsigned int nanoseconds = 0;
 	static bool fpsTextUpdated = false;
@@ -136,23 +144,39 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 
 	// Step 2: Detect collisions, and update positions, and shrink partial velocities until there are no more collisions to
 	//     collide or no more partial velocities to shrink
+	// For checking collisions, you only need to check the grids that are reachable by the maximum velocity magnitude of all particles
 	bool collided;
 	do {
+		double maxVelocityMagnitude = 0;
 		collided = false;
 
+		// Refresh the grid of pointers to already-collided sandgrains
 		ptrGrid.zero();
 
 		// First loop - go over all particle collisions first
 		for (vector<vector<SandGrain>>& row : grid.the) {
 			for (vector<SandGrain>& col : row) {
 				for (SandGrain& grain : col) {
+					// Calculate the highest velocity observed for gridding purposes
+					maxVelocityMagnitude = max(maxVelocityMagnitude, grain.getPartialVelocity().magnitude());
+
+					// Get how far one should extend the search area by how big the max velocity magnitude is
+					Vec2 hypotheticalPosition = grain.getPosition().add(grain.getPartialVelocity().scale(dtToSec(dt)));
+					int expandGrid = max(
+						abs(ptrGrid.getGridX(hypotheticalPosition.x()) - grid.getGridX(grain.getPosition().x())),
+						abs(ptrGrid.getGridY(hypotheticalPosition.y()) - grid.getGridY(grain.getPosition().y()))
+					) + 1;
 
 					// Perform and detect particle collisions using an O(n choose 2) selection algorithm,
-					//     limited by the grids (TODO: Limit them by the grids)
+					//     limited by the grids
 					if (ptrGrid.getSandCount() > 0) {
-						for (vector<vector<SandGrain*>>& ptrRow : ptrGrid.the) {
-							for (vector<SandGrain*>& ptrCol : ptrRow) {
-								for (SandGrain* otherGrain : ptrCol) {
+						int gridY = ptrGrid.getGridY(grain.getPosition().y());
+						for (int ptrRow = max(0, gridY - expandGrid); ptrRow <= min(gridY + expandGrid, ptrGrid.cellsY - 1); ptrRow++) {
+							int gridX = ptrGrid.getGridX(grain.getPosition().x());
+							for (int ptrCol = max(0, gridX - expandGrid); ptrCol <= min(gridX + expandGrid, ptrGrid.cellsX - 1); ptrCol++) {
+								for (int grainIndex = 0; grainIndex < ptrGrid.the[ptrRow][ptrCol].size(); grainIndex++) {
+									SandGrain* otherGrain = ptrGrid.the[ptrRow][ptrCol][grainIndex];
+
 									// If the two grains of sand are not the same grain of sand, check collision
 									if (grain.id() != otherGrain->id()) {
 										Vec2 beforeVelocityP0 = grain.getVelocity(); // TESTING CODE
@@ -188,7 +212,6 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 					// Add the current particle to the matrix of particles that have already been collision-calculated
 					SandGrain* tempPtr = &grain; // This points to the sandgrain
 					ptrGrid.addParticle(&tempPtr); // Pointer to the pointer, yet it pushes the SandGrain* to the matrix. It will work
-
 				}
 			}
 		}
