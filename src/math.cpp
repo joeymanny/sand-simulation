@@ -27,8 +27,14 @@ void Vec2::set(const double& x, const double& y) {
 	yPos = y;
 	dir = atan2(yPos, xPos);
 	mag = sqrt(pow(xPos, 2) + pow(yPos, 2));
+
+	if (mag > 1e-12){
 	unitX = xPos / mag;
-	unitY = yPos / mag;
+	unitY = yPos / mag;}
+	else {
+	unitX = 0;
+	unitY = 0;
+	}
 }
 
 const double& Vec2::x() const {
