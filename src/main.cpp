@@ -85,6 +85,9 @@ void windowClose();
 //     the window. SDL_RenderPresent happens at the END of every frame for consistency, rather than
 //     somewhere in the middle
 bool loop(SDL_Event* e, SDL_Time dt) {
+	// Keep track of the grains of sand we have already looped through during the collision checker loop
+	static SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	// Keep track of time (modulated) for framerate rendering purposes
 	static unsigned int nanoseconds = 0;
 	static bool fpsTextUpdated = false;
@@ -137,8 +140,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	do {
 		collided = false;
 
-		// Keep track of the grains of sand we have already looped through
-		SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
+		ptrGrid.zero();
 
 		// First loop - go over all particle collisions first
 		for (vector<vector<SandGrain>>& row : grid.the) {

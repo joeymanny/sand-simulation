@@ -47,6 +47,9 @@ template <class SandType = SandGrain> class SandGrid {
 
 		// Update grid placements for position updates
 		void updateGridPlacements();
+
+		// Zero out the entire sand grid
+		void zero();
 };
 
 bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt);

@@ -12,8 +12,8 @@
 
 template <class SandType> SandGrid<SandType>::SandGrid(int screenWidth, int screenHeight) {
 	// Divide up the screen into cells
-	cellsX = screenWidth / GRID_CELL_WIDTH;
-	cellsY = screenHeight / GRID_CELL_WIDTH;
+	cellsX = ceil((long double)screenWidth / GRID_CELL_WIDTH);
+	cellsY = ceil((long double)screenHeight / GRID_CELL_WIDTH);
 
 	// Allocate memory for the cells
 	the.resize(cellsY);
@@ -70,6 +70,12 @@ template <> void SandGrid<SandGrain>::updateGridPlacements() {
 
 template <class SandType> int SandGrid<SandType>::getSandCount() const {
 	return sandCount;
+}
+
+template <class SandType> void SandGrid<SandType>::zero() {
+	for (vector<vector<SandType>>& row : the)
+		for (vector<SandType>& cell : row)
+			cell = vector<SandType>();
 }
 
 // stuff needed
