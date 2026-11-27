@@ -184,6 +184,10 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 								for (int grainIndex = 0; grainIndex < ptrGrid.the[ptrRow][ptrCol].size(); grainIndex++) {
 									SandGrain* otherGrain = ptrGrid.the[ptrRow][ptrCol][grainIndex];
 
+									// Dont check this particle if it is basically immobile
+									if (otherGrain->getVelocity().magnitude() < 1e-5)
+										continue;
+
 									// If the two grains of sand are not the same grain of sand, check collision
 									if (grain.id() != otherGrain->id()) {
 										Vec2 beforeVelocityP0 = grain.getVelocity(); // TESTING CODE
@@ -231,7 +235,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 					Vec2 beforeVelocity = grain.getVelocity(); // TESTING CODE
 					Vec2 beforePVelocity = grain.getPartialVelocity(); // TESTING CODE
 
-					if (grain.detectScreenBoundsCollision(dt)) {
+					if (!grain.isStationary() && grain.detectScreenBoundsCollision(dt)) {
 						// If the particle is effectively immobile, structurallly stop it
 						if (grain.isSlowEnough())
 							grain.screenBoundStop();
@@ -366,11 +370,11 @@ int main() {
 		SDL_GetCurrentTime(&tick);
 
 		// linear congruent radomizer or something
-		// if (tick % 2000 < 100){
-		// 	SandGrain testParticle2({SCREEN_WIDTH / 2.0 + (tick % 1000 - 50), 50});
-		// 	grid.addParticle(&testParticle2);
-		// 	SDL_Log("%d", grid.getSandCount());
-		// }
+		if (tick % 2000 < 100){
+			SandGrain testParticle2({SCREEN_WIDTH / 2.0 + (tick % 1000 - 50), 50});
+			grid.addParticle(&testParticle2);
+			SDL_Log("%d", grid.getSandCount());
+		}
 
 		// Sleep until you are able to render the next frame. This is what allows framerate limiting
 		SDL_Time renderTime = tick - now;

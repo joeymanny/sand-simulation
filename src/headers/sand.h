@@ -53,6 +53,9 @@ class SandGrain {
 		// Get partial velocity
 		const Vec2& getPartialVelocity() const;
 
+		// If the particle is considered "stationary"
+		bool isStationary() const;
+
 		// Return the particle's unique identifier
 		unsigned long id() const;
 

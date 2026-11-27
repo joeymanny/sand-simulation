@@ -5,6 +5,7 @@
 #include <SDL3/SDL_log.h>
 #include <cmath>
 #include <ctime>
+#include <algorithm>
 
 #include "headers/sand.h"
 #include "headers/common.h"
@@ -46,6 +47,8 @@ void SandGrain::updateVelocity(SDL_Time dt) {
 void SandGrain::updatePosition(SDL_Time dt) {
 	// Final updating of particle velocity
 	position.addAssign(partialVelocity.scale(dtToSec(dt)));
+	// Clamp to be within screen
+	position = {std::clamp(position.x(), RADIUS, SCREEN_WIDTH - RADIUS), std::clamp(position.y(), RADIUS, SCREEN_HEIGHT - RADIUS)};
 }
 
 void SandGrain::instantAccelerate(const Vec2& newVelocity) {
@@ -57,6 +60,9 @@ const Vec2& SandGrain::getVelocity() const {
 }
 const Vec2& SandGrain::getPartialVelocity() const {
 	return partialVelocity;
+}
+bool SandGrain::isStationary() const {
+	return stationary;
 }
 
 bool SandGrain::detectScreenBoundsCollision(const double& dt) const {

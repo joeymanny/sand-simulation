@@ -53,10 +53,10 @@ template <> void SandGrid<SandGrain>::updateGridPlacements() {
 			// For each grain in the row+col cell,
 			for (int grain = 0; grain < the.at(row).at(col).size();) {
 				// Get the grid position the particle is supposed to be in
-				int gridY = the[row][col][grain].getPosition().y() / GRID_CELL_WIDTH;
-				int gridX = the[row][col][grain].getPosition().x() / GRID_CELL_WIDTH;
+				int gridY = screenClamp(the[row][col][grain].getPosition().y(), true) / GRID_CELL_WIDTH;
+				int gridX = screenClamp(the[row][col][grain].getPosition().x(), false) / GRID_CELL_WIDTH;
 				// If the intended grid position mismatches the current grid position, and the intended grid position is valid,
-				if ((gridY != row && gridY < cellsY && gridY >= 0) || (gridX != col && gridX < cellsX && gridY >= 0)) {
+				if ((gridY != row || gridX != col) && ((gridY < cellsY && gridY >= 0) && (gridX < cellsX && gridX >= 0))) {
 					// Move the grain to the intended grid position and erase the particle in the current grid
 					SandGrain currentGrain = the[row][col][grain];
 					auto it = the[row][col].cbegin() + grain;
