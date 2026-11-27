@@ -22,8 +22,6 @@ class SandGrain {
 		// Particle properties
 		// Partial velocity is the remaining velocity to traverse throughout the current frame, for collision purposes
 		Vec2 position, velocity, partialVelocity, acceleration;
-		double frictionMult = DEFAULT_FRICTION;
-		double gravityAccel = DEFAULT_GRAVITY;
 		// If the current particle is immobile. When setting to true, set velocity and partialVelocity to (0, 0)
 		bool stationary = false;
 		// Unique particle identifier for equality purposes
@@ -31,6 +29,9 @@ class SandGrain {
 
 	public:
 		static constexpr double RADIUS = 20; // In pixels
+
+		static double frictionMult;
+		static double gravityAccel;
 
 		// Constructor (do `SandGrain grain({x, y})` to initialize)
 		SandGrain(const Vec2& initialPosition);

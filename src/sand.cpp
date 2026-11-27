@@ -10,6 +10,9 @@
 #include "headers/common.h"
 #include "headers/math.h"
 
+double SandGrain::frictionMult = DEFAULT_FRICTION;
+double SandGrain::gravityAccel = DEFAULT_GRAVITY;
+
 SandGrain::SandGrain(const Vec2& startingPosition) {
 	// Assign a unique identifier
 	static unsigned long id = 0;
