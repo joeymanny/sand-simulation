@@ -88,6 +88,9 @@ bool windowInit();
 // Close the window
 void windowClose();
 
+// Initialize or re-initialize the particles
+void initializeParticles();
+
 // This function is ran every frame. Return false to close the program.
 // The vase majority of the program functionality is here, so it is the first defined function
 // Run the rendering and calculations here, but don't do SDL_RenderPresent inside this loop.
@@ -122,7 +125,14 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			sliders[selectedSlider].updateValFromMouseMotion(e->motion.x, e->motion.xrel);
 			// SDL_Log("slider value now: %f", sliders[selectedSlider].getValue());
 		}
-		// TODO: reset button to reset simulation while keeping slider values the same
+
+		// Detect r-keyup (keydown + keyup) to reset the particles
+		if (e->type == SDL_EVENT_KEY_UP) {
+			if (e->key.key == SDLK_R) {
+				initializeParticles();
+				return true;
+			}
+		}
 	}
 
 	// Refresh framebuffer to all black
@@ -308,6 +318,24 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 	return true;
 }
 
+void initializeParticles() {
+	// Zero the particle list
+	grid.zero();
+
+	SandGrain testParticle0({200, 100});
+	testParticle0.instantAccelerate({-9999999, -9999999});
+	grid.addParticle(&testParticle0);
+	SandGrain testParticle1({225, 200});
+	testParticle1.instantAccelerate({-9999999, 9999999});
+	grid.addParticle(&testParticle1);
+	SandGrain testParticle2({600, 50});
+	testParticle2.instantAccelerate({9999999, -9999999});
+	grid.addParticle(&testParticle2);
+	SandGrain testParticle3({20, 20});
+	testParticle3.instantAccelerate({9999999, 9999999});
+	grid.addParticle(&testParticle3);
+}
+
 // No need to edit this function unless chaning something fundamental
 int main() {
 	// Initialize window
@@ -326,19 +354,7 @@ int main() {
 	SDL_GetCurrentTime(&now);
 
 	// Initialize particles
-	SandGrain testParticle0({200, 100});
-	// testParticle0.instantAccelerate({0, 0});
-	testParticle0.instantAccelerate({-9999999, -9999999}); // Uncomment this to test more complex collisions
-	grid.addParticle(&testParticle0);
-	SandGrain testParticle1({225, 200});
-	testParticle1.instantAccelerate({-9999999, 9999999});
-	grid.addParticle(&testParticle1);
-	SandGrain testParticle2({600, 50});
-	testParticle2.instantAccelerate({9999999, -9999999});
-	grid.addParticle(&testParticle2);
-	SandGrain testParticle3({20, 20});
-	testParticle3.instantAccelerate({9999999, 9999999});
-	grid.addParticle(&testParticle3);
+	initializeParticles();
 
 	// Main loop
 	while (loop(&e, dt)) {
