@@ -4,6 +4,7 @@
  * All functions in here operate upon a single grain of sand
  */
 
+#include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_time.h>
 
 #include "math.h"
@@ -66,5 +67,5 @@ class SandGrain {
 		// Stop the particle when the particle is slow enough to be considered "stopping", after a screen edge collision
 		void screenBoundStop();
 
-		friend bool collideParticles(SandGrain* a, SandGrain* b);
+		friend bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt);
 };

@@ -156,7 +156,7 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 										Vec2 beforePVelocityP0 = grain.getPartialVelocity(); // TESTING CODE
 										Vec2 beforeVelocityP1 = otherGrain->getVelocity(); // TESTING CODE
 										Vec2 beforePVelocityP1 = otherGrain->getPartialVelocity(); // TESTING CODE
-										collided = collideParticles(&grain, otherGrain); // This will also update their properties
+										collided = collideParticles(&grain, otherGrain, dt); // This will also update their properties
 										if (collided) {
 											SDL_Log("Particle Collision!");
 

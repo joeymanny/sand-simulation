@@ -69,7 +69,7 @@ template <class SandType> int SandGrid<SandType>::getSandCount() const {
 }
 
 // stuff needed
-bool collideParticles(SandGrain* a, SandGrain* b){
+bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
 

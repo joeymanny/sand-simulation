@@ -49,7 +49,7 @@ template <class SandType = SandGrain> class SandGrid {
 		void updateGridPlacements();
 };
 
-bool collideParticles(SandGrain* a, SandGrain* b);
+bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt);
 
 // stuff needed
 // One thing to have is a function to convert particle positions to screen coordinates based on window size and zoom
