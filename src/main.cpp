@@ -202,10 +202,10 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 											Vec2 afterPVelocityP0 = grain.getPartialVelocity();
 											Vec2 afterVelocityP1 = otherGrain->getVelocity();
 											Vec2 afterPVelocityP1 = otherGrain->getPartialVelocity();
-											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", grain.id(), beforeVelocityP0.x(), beforeVelocityP0.y(), afterVelocityP0.x(), afterVelocityP0.y());
-											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", grain.id(), beforePVelocityP0.x(), beforePVelocityP0.y(), afterPVelocityP0.x(), afterPVelocityP0.y());
-											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", otherGrain->id(), beforeVelocityP1.x(), beforeVelocityP1.y(), afterVelocityP1.x(), afterVelocityP1.y());
-											SDL_Log("\x1B[33mP%ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", otherGrain->id(), beforePVelocityP1.x(), beforePVelocityP1.y(), afterPVelocityP1.x(), afterPVelocityP1.y());
+											SDL_Log("\x1B[33mP%-3ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", grain.id(), beforeVelocityP0.x(), beforeVelocityP0.y(), afterVelocityP0.x(), afterVelocityP0.y());
+											SDL_Log("\x1B[33mP%-3ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", grain.id(), beforePVelocityP0.x(), beforePVelocityP0.y(), afterPVelocityP0.x(), afterPVelocityP0.y());
+											SDL_Log("\x1B[33mP%-3ld \x1B[31mPARTICLE\x1B[0m :: VELOCITY         | Before: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m), After: (\x1B[34m%lf\x1B[0m, \x1B[34m%lf\x1B[0m)", otherGrain->id(), beforeVelocityP1.x(), beforeVelocityP1.y(), afterVelocityP1.x(), afterVelocityP1.y());
+											SDL_Log("\x1B[33mP%-3ld \x1B[31mPARTICLE\x1B[0m :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m), After: (\x1B[36m%lf\x1B[0m, \x1B[36m%lf\x1B[0m)", otherGrain->id(), beforePVelocityP1.x(), beforePVelocityP1.y(), afterPVelocityP1.x(), afterPVelocityP1.y());
 											circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
 											circle(&permanentTrail, otherGrain->getPosition(), 5, 0xFF0000FF);
 
@@ -246,8 +246,8 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 						// TESTING/DEMO CODE: partial velocity
 						Vec2 afterVelocity = grain.getVelocity();
 						Vec2 afterPVelocity = grain.getPartialVelocity();
-						SDL_Log("\x1B[33mP%ld \x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", grain.id(), beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
-						SDL_Log("\x1B[33mP%ld \x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", grain.id(), beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
+						SDL_Log("\x1B[33mP%-3ld \x1B[32mSCREEN\x1B[0m   :: VELOCITY         | Before: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m), After: (\x1B[34m%lf\x1b[0m, \x1B[34m%lf\x1b[0m)", grain.id(), beforeVelocity.x(), beforeVelocity.y(), afterVelocity.x(), afterVelocity.y());
+						SDL_Log("\x1B[33mP%-3ld \x1B[32mSCREEN\x1B[0m   :: PARTIAL VELOCITY | Before: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m), After: (\x1B[36m%lf\x1b[0m, \x1B[36m%lf\x1b[0m)", grain.id(), beforePVelocity.x(), beforePVelocity.y(), afterPVelocity.x(), afterPVelocity.y());
 					}
 				}
 			}
@@ -271,8 +271,14 @@ bool loop(SDL_Event* e, SDL_Time dt) {
 			for (SandGrain& grain : col) {
 				circle(&pixelData, grain.getPosition(), grain.RADIUS, 0xFFFFFFFF);
 				// circle(&permanentTrail, grain.getPosition(), 5, 0xFF0000FF);
+
 				// TESTING CODE: Label each particle with it's ID for easy tracking
-				drawText(&pixelData, grain.getPosition().add({-4, -6}), 2.0, 0x000000FF, to_string(grain.id()));
+				double position = -4;
+				if (grain.id() / 100 >= 1)
+					position = -16;
+				else if (grain.id() / 10 >= 1)
+					position = -10;
+				drawText(&pixelData, grain.getPosition().add({position, -6}), 2.0, 0x000000FF, to_string(grain.id()));
 			}
 		}
 	}
