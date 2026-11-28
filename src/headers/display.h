@@ -9,20 +9,20 @@
 #include "math.h"
 #include "interactions.h"
 
-inline constexpr int SLIDER_WIDTH = 100;
-inline constexpr int SLIDER_HEIGHT = 4;
-inline constexpr int SLIDER_CIRCLE_RADIUS = 8;
-inline constexpr int SLIDER_BOUNDS_GRACE = 1;
+#define SLIDER_WIDTH 100
+#define SLIDER_HEIGHT 4
+#define SLIDER_CIRCLE_RADIUS 8
+#define SLIDER_BOUNDS_GRACE 1
 // color of the sand - red chennel
-inline constexpr unsigned int SAND_COLOR_R = 0xFF; // 0xE2;
+#define SAND_COLOR_R 0xFF // 0xE2;
 // color of the sand - green chennel
-inline constexpr unsigned int SAND_COLOR_G = 0xDF; // 0xCA;
+#define SAND_COLOR_G 0xDF // 0xCA;
 // color of the sand - blue chennel
-inline constexpr unsigned int SAND_COLOR_B = 0x81; // 0x76;
+#define SAND_COLOR_B 0x81 // 0x76;
 // how sharply the brightness of a pixel increases with the number
 // of sand particle. at a low value one grain will appear dim, at a high
 // value one grain will appear bright
-inline constexpr double COLOR_RAMP_SHARPNESS = 2.0;
+#define COLOR_RAMP_SHARPNESS 2.0
 class Slider {
 	private:
 		int xPos;

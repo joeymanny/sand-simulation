@@ -7,7 +7,7 @@
  * This source file is the entry point for the sand simulation program.
  */
 
-constexpr char TITLE[] = "Unnamed Sand Simulation";
+#define TITLE "Unnamed Sand Simulation"
 
 // Simple Directmedia Layer
 #include <cmath>
@@ -24,8 +24,8 @@ constexpr char TITLE[] = "Unnamed Sand Simulation";
 #include "headers/sand.h"
 
 // Global constants
-constexpr int FPS_LIMIT = 60;
-constexpr int NS_PER_SEC = 1000000000;
+#define FPS_LIMIT 60
+#define NS_PER_SEC 1000000000
 constexpr long NS_PER_FRAME = NS_PER_SEC / FPS_LIMIT;
 
 // For sliders: Bounds of...
@@ -53,7 +53,7 @@ SandGrid<SandGrain*> ptrGrid(SCREEN_WIDTH, SCREEN_HEIGHT);
 // this const must be updated by hand.
 // it must EXCLUDE the NONE variant.
 // READ COMMENT PLS
-constexpr int NUM_SLIDERS = 2;
+#define NUM_SLIDERS 2
 enum ProgramSlider{
 	FRICTION,
 	PLATFORM,

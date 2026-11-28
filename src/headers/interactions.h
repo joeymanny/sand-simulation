@@ -10,6 +10,7 @@ using namespace std;
 #include "sand.h"
 
 // Constantinoples
+#define PARTICLE_COLL_VELOCITY_STOP_THRESHOLD
 
 // Sand state
 // This class is only implemented for SandGrain and SandGrid, as seen in interactions.cpp
