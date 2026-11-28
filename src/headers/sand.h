@@ -11,19 +11,21 @@
 
 // Sweet spot velocity stop threshold: no sudden cuts, no unnecessary velocity updates. DO NOT CHANGE
 #define VELOCITY_STOP_THRESHOLD 38
+// Settle the particles if it displaces this much after a collision after being un-stationaried
+#define DISPLACEMENT_SETTLE_THRESHOLD 4
 // Default gravity that makes things look realistic
 #define DEFAULT_GRAVITY 4096
 // Default friction arbitrarily chosen
-#define DEFAULT_FRICTION 0
+#define DEFAULT_FRICTION 0.05
 
 // Defines a single grain of sand
 class SandGrain {
 	protected:
 		// Particle properties
 		// Partial velocity is the remaining velocity to traverse throughout the current frame, for collision purposes
-		Vec2 position, velocity, partialVelocity;
+		Vec2 position, frameStartPosition, velocity, partialVelocity;
 		// If the current particle is immobile. When setting to true, set velocity and partialVelocity to (0, 0)
-		bool stationary = false;
+		bool stationary = false, comfortablyStationary = false, stationaryParticleCollided = false;
 		// Unique particle identifier for equality purposes
 		unsigned long identifier;
 
@@ -55,6 +57,8 @@ class SandGrain {
 
 		// If the particle is considered "stationary"
 		bool isStationary() const;
+		// If the particle is considered "comfortably stationary"
+		bool isComfortablyStationary() const;
 
 		// Return the particle's unique identifier
 		unsigned long id() const;

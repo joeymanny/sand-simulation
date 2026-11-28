@@ -11,6 +11,7 @@ using namespace std;
 
 // Constantinoples
 #define PARTICLE_COLL_VELOCITY_STOP_THRESHOLD 30
+#define PARTICLE_COLL_VELOCITY_UNSETTLE_THRESHOLD 50
 
 // Sand state
 // This class is only implemented for SandGrain and SandGrid, as seen in interactions.cpp

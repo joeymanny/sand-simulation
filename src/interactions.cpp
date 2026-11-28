@@ -174,17 +174,24 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
 		collisionA = collisionA.add(correction);
 		collisionB = collisionB.add(correction.scale(-1)); }
 
+	newVelocityA.scaleAssign(1 - SandGrain::frictionMult);
+	newVelocityB.scaleAssign(1 - SandGrain::frictionMult);
+
 	//set all the found values
-	a->position = collisionA;
-	b->position = collisionB;
-
-	a->velocity = newVelocityA.scale(1 - SandGrain::frictionMult);
-	b->velocity = newVelocityB.scale(1 - SandGrain::frictionMult);
-
 	double remainingTime = deltaTime - t;
 
-	a->partialVelocity = newVelocityA.scale(remainingTime);
-	b->partialVelocity = newVelocityB.scale(remainingTime);
+	if (!a->comfortablyStationary || newVelocityB.magnitude() > PARTICLE_COLL_VELOCITY_UNSETTLE_THRESHOLD) {
+		a->comfortablyStationary = false;
+		a->position = collisionA;
+		a->velocity = newVelocityA.scale(1 - SandGrain::frictionMult);
+		a->partialVelocity = newVelocityA.scale(remainingTime);
+	}
+	if (!b->comfortablyStationary || newVelocityA.magnitude() > PARTICLE_COLL_VELOCITY_UNSETTLE_THRESHOLD) {
+		b->comfortablyStationary = false;
+		b->position = collisionB;
+		b->velocity = newVelocityB.scale(1 - SandGrain::frictionMult);
+		b->partialVelocity = newVelocityB.scale(remainingTime);
+	}
 
 	// If a particle collides with an immobile particle and is slow enough, stop it!
 	bool lowVelocityA = a->velocity.magnitude() < PARTICLE_COLL_VELOCITY_STOP_THRESHOLD;
@@ -197,8 +204,15 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
 		b->partialVelocity = {0, 0};
 		b->stationary = true;
 	} else {
-		a->stationary = false;
-		b->stationary = false;
+		if (a->stationary)
+			a->stationaryParticleCollided = true;
+		if (b->stationary)
+			b->stationaryParticleCollided = true;
+
+		if (!a->comfortablyStationary)
+			a->stationary = false;
+		if (!b->comfortablyStationary)
+			b->stationary = false;
 	}
 
 	return true;

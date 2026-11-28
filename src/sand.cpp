@@ -41,6 +41,10 @@ void SandGrain::updateVelocity(SDL_Time dt) {
 		partialVelocity = velocity;
 	}
 	// REMEMBER: Once particles are put on top of other particles, make a way to turn stationary off with other particles start moving
+
+	// At this point this function is effectively a state resetter too
+	frameStartPosition = position;
+	stationaryParticleCollided = false;
 }
 
 void SandGrain::updatePosition(SDL_Time dt) {
@@ -48,6 +52,15 @@ void SandGrain::updatePosition(SDL_Time dt) {
 	position.addAssign(partialVelocity.scale(dtToSec(dt)));
 	// Clamp to be within screen
 	position = {std::clamp(position.x(), RADIUS, SCREEN_WIDTH - RADIUS), std::clamp(position.y(), RADIUS, SCREEN_HEIGHT - RADIUS)};
+
+	// At this point this function is effectifely a frame finalizer
+	// This determines if a particle should settle based on being collided with despite having been stationary
+	if (stationaryParticleCollided && position.add(frameStartPosition.negate()).magnitude() < DISPLACEMENT_SETTLE_THRESHOLD) {
+		position = frameStartPosition;
+		stationary = true;
+		comfortablyStationary = true;
+		velocity = {0, 0};
+	}
 }
 
 void SandGrain::instantAccelerate(const Vec2& newVelocity) {
@@ -62,6 +75,9 @@ const Vec2& SandGrain::getPartialVelocity() const {
 }
 bool SandGrain::isStationary() const {
 	return stationary;
+}
+bool SandGrain::isComfortablyStationary() const {
+	return comfortablyStationary;
 }
 
 bool SandGrain::detectScreenBoundsCollision(const double& dt) const {
@@ -131,7 +147,7 @@ void SandGrain::screenBoundStop() {
 	Vec2 relativeVector = (position.add(partialVelocity).add(position.negate()));
 	// Calculate the final x distance and y distance
 	double yDistance = SCREEN_HEIGHT - RADIUS - position.y();
-	double xDistance = 8 * (relativeVector.x() / relativeVector.y());
+	double xDistance = yDistance * (relativeVector.x() / relativeVector.y());
 
 	// Zero the velocity and set the final positin
 	velocity.set(0, 0);
