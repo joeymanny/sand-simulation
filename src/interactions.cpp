@@ -89,34 +89,46 @@ template <class SandType> int SandGrid<SandType>::getGridY(double y) const {
 // stuff needed
 
 bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
+    //checks that the particles exist and aren't pointing to the same particle
     if (a == nullptr || b == nullptr || a == b)
         return false;
 
+    //find the change in time, the change in position and velocity
+    //and the distance between the two centers if the objects were touching
     double deltaTime = dtToSec(dt);
-
     Vec2 dPos = a->getPosition().add(b->getPosition().negate());
     Vec2 dVel = a->getVelocity().add(b->getVelocity().negate());
-
     double radiusSum = 2 * SandGrain::RADIUS;
 
+    //A is how fast the distance between them changes (A = 0 means no collision)
+    //B is how fast they're moving towards / away from eachother (- closer, + further, no collision)
+    //C is whether they are connected(- overlapping, + not touching, 0 touching the edge of the circles)
     double A = dVel.dotProduct(dVel);
     double B = 2 * dPos.dotProduct(dVel);
     double C = dPos.dotProduct(dPos) - radiusSum * radiusSum;
 
     double t = -1;
 
+    //check if they start overlapped
     if (C <= 0) {
+        //check if youve already started moving them so they don't touch
         if (dPos.dotProduct(dVel) >= 0)
             return false;
         t = 0; }
     else {
+        //make sure they're going to hit
         if (A < 1e-10 || B >= 0)
             return false;
 
+        //the smaller of the two numbers given by the disc is when they touch (smaller is when they enter, larger is when they'd exit if they passed through)
+        //if negative they never touch
+        //if not real they never touch
+        //if 0 they touch but its tangential so no velocity
         double discriminant = B * B - 4 * A * C;
         if (discriminant < 0)
             return false;
 
+        //do the quadratic formula to find t
         double sqrtD = sqrt(discriminant);
         double t1 = (-B - sqrtD) / (2 * A);
 
@@ -125,31 +137,35 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
 
         t = t1; }
 
+    //find the points at which they collide
     Vec2 collisionA = a->getPosition().add(a->getVelocity().scale(t));
     Vec2 collisionB = b->getPosition().add(b->getVelocity().scale(t));
-    Vec2 difference = collisionA.add(collisionB.negate());
 
+    //find their new positions and how far they are away from eachother after collision (should be 2r)
+    Vec2 difference = collisionA.add(collisionB.negate());
     double distance = difference.magnitude();
 
     // Make sure that it updated correctly and is not NaN
     if (distance < 1e-10 || !isfinite(distance))
         return false;
 
+    //find where the intersection is pointing and at what speed the particles are going
     Vec2 normal = difference.scale(1 / distance);
-
     double relativeNormalVelocity = dVel.dotProduct(normal);
 
+    //initialize the variable that is going to be new velocity
     Vec2 newVelocityA = a->getVelocity();
     Vec2 newVelocityB = b->getVelocity();
 
+    //find the ammount to be added along the vector connecting the 2 collisions and add it
     if (relativeNormalVelocity < -1e-9) {
         Vec2 impulse = normal.scale(-(1 + 2 * BOUNCE_VELOCITY_LOSS_MOD) * relativeNormalVelocity * 0.5);
-
         newVelocityA = newVelocityA.add(impulse);
         newVelocityB = newVelocityB.add(impulse.scale(-1)); }
 
+    //make sure that they're not touching, if they are, move them
+    //back far enough on the vector between their centers that they're not
     double overlap = radiusSum - distance;
-
     if (overlap > 0) {
         double slop = 0.01;
         double correctionAmount = (overlap + slop) * 0.5;
@@ -158,6 +174,7 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
         collisionA = collisionA.add(correction);
         collisionB = collisionB.add(correction.scale(-1)); }
 
+    //set all the found values
     a->position = collisionA;
     b->position = collisionB;
 
