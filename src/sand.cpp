@@ -19,9 +19,8 @@ SandGrain::SandGrain(const Vec2& startingPosition) {
 	static unsigned long id = 0;
 	identifier = id++;
 
-	// Put starting values
+	// Put starting value
 	position = startingPosition;
-	acceleration.set(0, gravityAccel);
 }
 
 unsigned long SandGrain::id() const {
@@ -35,7 +34,7 @@ const Vec2& SandGrain::getPosition() const {
 void SandGrain::updateVelocity(SDL_Time dt) {
 	// Update the position if the particle is not stationary
 	if (!stationary) {
-		velocity.addAssign(acceleration.scale(dtToSec(dt)));
+		velocity.addAssign(Vec2(0, gravityAccel).scale(dtToSec(dt)));
 		velocity.addAssign(velocity.scale(AIR_RESISTANCE_SUB_MOD).scale(dtToSec(dt)).negate());
 
 		// Refresh velocity

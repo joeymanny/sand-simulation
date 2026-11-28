@@ -21,7 +21,7 @@ class SandGrain {
 	protected:
 		// Particle properties
 		// Partial velocity is the remaining velocity to traverse throughout the current frame, for collision purposes
-		Vec2 position, velocity, partialVelocity, acceleration;
+		Vec2 position, velocity, partialVelocity;
 		// If the current particle is immobile. When setting to true, set velocity and partialVelocity to (0, 0)
 		bool stationary = false;
 		// Unique particle identifier for equality purposes

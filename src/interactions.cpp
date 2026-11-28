@@ -186,8 +186,10 @@ bool collideParticles(SandGrain* a, SandGrain* b, SDL_Time dt) {
 	a->partialVelocity = newVelocityA.scale(remainingTime);
 	b->partialVelocity = newVelocityB.scale(remainingTime);
 
-	// If a particle collides and is slow enough, stop it!
-	if (a->velocity.magnitude() < PARTICLE_COLL_VELOCITY_STOP_THRESHOLD && b->velocity.magnitude() < PARTICLE_COLL_VELOCITY_STOP_THRESHOLD) {
+	// If a particle collides with an immobile particle and is slow enough, stop it!
+	bool lowVelocityA = a->velocity.magnitude() < PARTICLE_COLL_VELOCITY_STOP_THRESHOLD;
+	bool lowVelocityB = b->velocity.magnitude() < PARTICLE_COLL_VELOCITY_STOP_THRESHOLD;
+	if (lowVelocityA && lowVelocityB && (a->stationary || b->stationary)) {
 		a->velocity = {0, 0};
 		a->partialVelocity = {0, 0};
 		a->stationary = true;
